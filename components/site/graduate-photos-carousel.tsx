@@ -13,12 +13,20 @@ import type { GraduatePhotoSlide } from "@/lib/graduate-photos-data";
 
 const GAP_PX = 24;
 /** Tijd tussen automatische slides (ms) */
-const AUTO_ADVANCE_MS = 4500;
+const AUTO_ADVANCE_MS = 3000;
 
 type GraduatePhotosCarouselProps = {
   slides: GraduatePhotoSlide[];
   size?: "default" | "compact";
 };
+
+function getFlexGapPx(listEl: HTMLElement | null) {
+  if (!listEl) return GAP_PX;
+  const cs = window.getComputedStyle(listEl);
+  const raw = cs.columnGap || cs.gap || "0px";
+  const px = Number.parseFloat(raw);
+  return Number.isFinite(px) && px > 0 ? px : GAP_PX;
+}
 
 export function GraduatePhotosCarousel({
   slides,
@@ -32,8 +40,10 @@ export function GraduatePhotosCarousel({
     const el = scrollerRef.current;
     if (!el) return 0;
     const slide = el.querySelector<HTMLElement>("[data-graduate-slide]");
+    const list = el.querySelector<HTMLElement>("[data-graduate-list]");
+    const gapPx = getFlexGapPx(list);
     return slide
-      ? slide.getBoundingClientRect().width + GAP_PX
+      ? slide.getBoundingClientRect().width + gapPx
       : el.clientWidth * 0.85;
   }, []);
 
@@ -113,10 +123,11 @@ export function GraduatePhotosCarousel({
       <ul
         className={
           size === "compact"
-            ? "flex w-max gap-4 px-4 py-1 sm:px-6 sm:py-1.5 md:gap-6 md:px-10 lg:px-14"
-            : "flex w-max gap-6 px-4 py-1 sm:px-6 sm:py-2 md:gap-8 md:px-10 lg:px-14"
+            ? "flex w-max gap-3 px-4 py-1 sm:px-6 sm:py-1.5 md:gap-4 md:px-10 lg:gap-6 lg:px-14"
+            : "flex w-max gap-3 px-4 py-1 sm:px-6 sm:py-2 md:gap-4 md:px-10 lg:gap-8 lg:px-14"
         }
         role="list"
+        data-graduate-list
       >
         {slides.map((slide) => (
           <li
@@ -124,8 +135,8 @@ export function GraduatePhotosCarousel({
             data-graduate-slide
             className={
               size === "compact"
-                ? "w-44 shrink-0 snap-start sm:w-48 md:w-52"
-                : "w-52 shrink-0 snap-start sm:w-56 md:w-60"
+                ? "w-[clamp(5.25rem,26vw,8.5rem)] shrink-0 snap-start lg:w-52"
+                : "w-[clamp(5.75rem,28vw,9.5rem)] shrink-0 snap-start lg:w-60"
             }
           >
             <figure className="flex flex-col gap-2">
@@ -138,8 +149,8 @@ export function GraduatePhotosCarousel({
                     className="object-cover"
                     sizes={
                       size === "compact"
-                        ? "(max-width: 640px) 40vw, (max-width: 1024px) 26vw, 240px"
-                        : "(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
+                        ? "(max-width: 1024px) 34vw, 240px"
+                        : "(max-width: 1024px) 34vw, 280px"
                     }
                   />
                 ) : (

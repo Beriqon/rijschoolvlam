@@ -4,6 +4,20 @@ export type VerrichtingBodyBlock =
   | { kind: "h2"; text: string }
   | { kind: "h3"; text: string }
   | { kind: "ul"; items: string[] }
+  | { kind: "image"; src: string; alt: string; width: number; height: number }
+  | { kind: "float-image"; src: string; alt: string; width: number; height: number }
+  | {
+      kind: "image-row";
+      images: { src: string; alt: string; width: number; height: number }[];
+    }
+  | {
+      kind: "p-image";
+      text: string;
+      src: string;
+      alt: string;
+      width: number;
+      height: number;
+    }
   /** Rendert de YouTube-embed; gebruikt `youtubeId` op hetzelfde item. */
   | { kind: "embed-youtube" };
 
@@ -24,6 +38,8 @@ export type BijzondereVerrichtingItem = {
   cardImageFit?: "cover" | "contain";
   /** Alleen voor de overzichtskaart (bijv. cover terwijl de detailpagina `imageGallery` gebruikt). */
   cardImageSrc?: string;
+  /** Detailpagina hero: standaard `cover`; zet `contain` als alles in beeld moet blijven. */
+  heroImageFit?: "cover" | "contain";
   imageSrc?: string;
   imageAlt?: string;
   /** Natuurlijke afmetingen van `imageSrc` (voor volledige weergave zonder crop). */
@@ -43,7 +59,7 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Benaderen van de Turbo-rotonde (Utrecht)",
     teaser:
       "Turbo-rotondes in Utrecht: vaste stroken, veiliger rijden en betere doorstroming. Zo benader je de rotonde en wanneer geef je richting aan?",
-    cardImageFit: "cover",
+    cardImageSrc: "/verrichtingen/cover-turborotondedef.png",
     imageSrc: "/verrichtingen/cover-turborotonde.jpg",
     imageAlt: "Turbo-rotonde met duidelijke rijstrookvoering in Utrecht",
     imageWidth: 1024,
@@ -106,17 +122,31 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Vak vooruit parkeren (links)",
     teaser:
       "Tijdens het examen kom je aanrijden en krijg je de opdracht om vooruit links in een parkeervak te parkeren — met kijken, richting aangeven en precies insturen en terugsturen.",
-    cardImageFit: "cover",
-    imageSrc: "/verrichtingen/cover-vakvooruitparkerenlinks.jpg",
-    imageAlt: "Vooruit naar links inparkeren in een parkeervak",
-    imageWidth: 1024,
-    imageHeight: 559,
+    cardImageSrc: "/verrichtingen/cover-vooruitparkerenlinks.png",
+    imageSrc: "/verrichtingen/cover-vooruitparkerenlinks.png",
+    imageAlt: "Vak vooruit parkeren (links) — coverfoto",
+    imageWidth: 1432,
+    imageHeight: 1098,
     body: [
       {
         kind: "p",
         text: "Je komt aanrijden en krijgt de opdracht om vooruit in een vak te parkeren.",
       },
       { kind: "h2", text: "Kijken en richting aangeven" },
+      {
+        kind: "float-image",
+        src: "/verrichtingen/vooruitparkerenlinks.jpg",
+        alt: "Vak vooruit parkeren (links) — illustratie",
+        width: 595,
+        height: 842,
+      },
+      {
+        kind: "float-image",
+        src: "/verrichtingen/vooruitparkerenlinks2.webp",
+        alt: "Vak vooruit parkeren (links) — tweede illustratie",
+        width: 206,
+        height: 245,
+      },
       {
         kind: "p",
         text: "Afhankelijk van aan welke kant je wilt parkeren (links of rechts) moet je eerst kijken in de binnenspiegel, buitenspiegel en over je schouder.",
@@ -146,14 +176,21 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Achteruit in een vak inparkeren",
     teaser:
       "Stappenplan met herkenningspunten: positioneren langs het derde vak, langzaam achteruit met slippende koppeling en op het juiste moment insturen en terugsturen.",
-    cardImageFit: "cover",
-    imageSrc: "/verrichtingen/cover-achteruitinparkeren.jpg",
-    imageAlt: "Achteruit in een parkeervak inparkeren",
-    imageWidth: 1024,
-    imageHeight: 559,
+    cardImageSrc: "/verrichtingen/cover-achteruitinparkerendef.png",
+    imageSrc: "/verrichtingen/cover-achteruitinparkerendef.png",
+    imageAlt: "Achteruit in een vak inparkeren — coverfoto",
+    imageWidth: 1091,
+    imageHeight: 1442,
     body: [
       { kind: "h2", text: "Vak achteruit inparkeren – stappenplan met herkenningspunten" },
       { kind: "h3", text: "Positioneren voor het vak" },
+      {
+        kind: "float-image",
+        src: "/verrichtingen/achteruitvakinparkeren.webp",
+        alt: "Achteruit in een vak inparkeren — stappenplan (illustratie)",
+        width: 722,
+        height: 1024,
+      },
       {
         kind: "p",
         text: "Kijk eerst goed om je heen en geef richting naar rechts aan voordat je stopt, op ongeveer 70 meter afstand.",
@@ -191,10 +228,11 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Fileparkeren",
     teaser:
       "Parallel inparkeren: voorbereiden met spiegels en richting, eerste en tweede herkenningspunt, en zo recht afstellen tussen twee auto’s.",
-    imageSrc: "/verrichtingen/fileparkeren.jpg",
-    imageAlt: "Fileparkeren tussen twee geparkeerde auto’s",
-    imageWidth: 223,
-    imageHeight: 300,
+    cardImageSrc: "/verrichtingen/cover-fileparkeren.png",
+    imageSrc: "/verrichtingen/cover-fileparkeren.png",
+    imageAlt: "Fileparkeren — coverfoto",
+    imageWidth: 1536,
+    imageHeight: 1024,
     youtubeId: "iY17XLkcJ0Y",
     body: [
       { kind: "h2", text: "Voorbereiding" },
@@ -234,6 +272,35 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
         kind: "p",
         text: "Corrigeer indien nodig een klein beetje vooruit of achteruit zodat je netjes in het midden van het vak staat en voldoende ruimte voor- en achter je hebt.",
       },
+      {
+        kind: "image-row",
+        images: [
+          {
+            src: "/verrichtingen/fileparkeren1.jpg",
+            alt: "Fileparkeren stap 1",
+            width: 222,
+            height: 300,
+          },
+          {
+            src: "/verrichtingen/fileparkeren2.jpg",
+            alt: "Fileparkeren stap 2",
+            width: 224,
+            height: 300,
+          },
+          {
+            src: "/verrichtingen/fileparkeren3.jpg",
+            alt: "Fileparkeren stap 3",
+            width: 225,
+            height: 300,
+          },
+          {
+            src: "/verrichtingen/fileparkeren4.jpg",
+            alt: "Fileparkeren stap 4",
+            width: 223,
+            height: 300,
+          },
+        ],
+      },
       { kind: "h2", text: "Video: fileparkeren" },
       { kind: "embed-youtube" },
     ],
@@ -243,12 +310,27 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Keren op de weg",
     teaser:
       "Met de auto keren door vooruit tegen de stoep te sturen, achteruit te rijden en weer naar links uit te lijnen — rustig tempo en veel om je heen kijken.",
-    imageSrc: "/verrichtingen/kerenopdeweg.gif",
-    imageAlt: "Animation: keren op de weg tussen stoepranden",
-    imageWidth: 300,
-    imageHeight: 264,
+    cardImageSrc: "/verrichtingen/cover-kerenopdeweg.png",
+    imageSrc: "/verrichtingen/cover-kerenopdeweg.png",
+    imageAlt: "Keren op de weg — coverfoto",
+    imageWidth: 1283,
+    imageHeight: 1226,
     youtubeId: "kzudzYizVu0",
     body: [
+      {
+        kind: "float-image",
+        src: "/verrichtingen/kerenopdeweg.gif",
+        alt: "Animation: keren op de weg (stap 1)",
+        width: 300,
+        height: 264,
+      },
+      {
+        kind: "float-image",
+        src: "/verrichtingen/kerenopdeweg2.gif",
+        alt: "Animation: keren op de weg (stap 2)",
+        width: 300,
+        height: 264,
+      },
       {
         kind: "ul",
         items: [
@@ -270,12 +352,20 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Keren door middel van een halve draai",
     teaser:
       "Ruimte en verkeersborden controleren, netjes tegen de stoeprand stoppen, veilige stap-vooruit en vlot naar links doorsturen in één draai — zonder droogsturen.",
-    imageSrc: "/verrichtingen/kerenhalvedraai.jpg",
-    imageAlt: "Keren met een halve draai op krappe ruimte",
-    imageWidth: 600,
-    imageHeight: 627,
+    cardImageSrc: "/verrichtingen/cover-kerendoormiddelhalvedraai.png",
+    imageSrc: "/verrichtingen/cover-kerendoormiddelhalvedraai.png",
+    imageAlt: "Keren door middel van een halve draai — coverfoto",
+    imageWidth: 1536,
+    imageHeight: 1024,
     youtubeId: "xoEj0t_HQos",
     body: [
+      {
+        kind: "float-image",
+        src: "/verrichtingen/kerenhalvedraai.jpg",
+        alt: "Keren met een halve draai op krappe ruimte",
+        width: 600,
+        height: 627,
+      },
       {
         kind: "p",
         text: "Allereerst kijk je of je wel kunt en mag keren — let dus op de ruimte en op verkeersborden.",
@@ -325,10 +415,11 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Bocht achteruit keren",
     teaser:
       "Achteruit een scherpe hoek volgen: halverwege naar rechts pakken met halve slagen en op tijd terugsturen richting de stoeprand.",
-    imageSrc: "/verrichtingen/bochtachteruitkeren.gif",
-    imageAlt: "Animation: een bocht achteruit keren",
-    imageWidth: 221,
-    imageHeight: 300,
+    cardImageSrc: "/verrichtingen/cover-bochtachteruitkeren.png",
+    imageSrc: "/verrichtingen/cover-bochtachteruitkeren.png",
+    imageAlt: "Bocht achteruit keren — coverfoto",
+    imageWidth: 1190,
+    imageHeight: 1322,
     youtubeId: "xNv8w6-P3vc",
     body: [
       {
@@ -352,6 +443,7 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Recht achteruit",
     teaser:
       "Stap voor stap achteruit in een rechte lijn: koppel op het aangrijpingspunt weinig corrigerend sturen en de stoeprand in de buitenspiegel op circa 20 cm houden.",
+    heroImageFit: "contain",
     imageSrc: "/verrichtingen/cover-rechtachteruit.png",
     imageAlt: "Achteruit in een rechte lijn langs de stoeprand",
     imageWidth: 1536,
@@ -376,6 +468,7 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Hellingproef",
     teaser:
       "Gestopt op een helling wegrijden zonder terug te rollen: koppeling en gas op het punt, voorrang laten gaan rem los en gesteund wegrijden.",
+    heroImageFit: "contain",
     imageSrc: "/verrichtingen/cover-hellingproef.png",
     imageAlt: "Auto op helling langs de stoeprand — hellingproef",
     imageWidth: 1536,
@@ -404,20 +497,10 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     teaser:
       "Waarschuwingslampjes en bedieningsknappen kennen: de examinator kan tijdens een toets of examen inhoudelijke vragen over het dashboard en de techniek stellen.",
     cardImageSrc: "/verrichtingen/cover-dashboard.png",
-    imageGallery: [
-      {
-        src: "/verrichtingen/dashboard1.webp",
-        alt: "Dashboard met teller-, waarschuwingssymbolen en stuurkolomknoppen",
-        width: 768,
-        height: 981,
-      },
-      {
-        src: "/verrichtingen/dashboard2.gif",
-        alt: "Overzicht bedienings- en contourlampjes rond het stuur",
-        width: 300,
-        height: 265,
-      },
-    ],
+    imageSrc: "/verrichtingen/cover-dashboard.png",
+    imageAlt: "Dashboard coverfoto",
+    imageWidth: 1536,
+    imageHeight: 1024,
     youtubeId: "psnrylr6nx0",
     body: [
       {
@@ -427,6 +510,23 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
       {
         kind: "p",
         text: "Bij de intro staan foto’s van het dashboard ter referentie. Hieronder vind je een video voor extra uitleg. Technische vragen over het motorcompartiment zijn ook mogelijk — zie de pagina Motorcompartiment.",
+      },
+      {
+        kind: "image-row",
+        images: [
+          {
+            src: "/verrichtingen/dashboard1.webp",
+            alt: "Dashboard met teller-, waarschuwingssymbolen en stuurkolomknoppen",
+            width: 768,
+            height: 981,
+          },
+          {
+            src: "/verrichtingen/dashboard2.gif",
+            alt: "Overzicht bedienings- en contourlampjes rond het stuur",
+            width: 300,
+            height: 265,
+          },
+        ],
       },
       { kind: "h2", text: "Video: dashboard en cockpit" },
       { kind: "embed-youtube" },
@@ -462,8 +562,12 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     imageHeight: 1024,
     body: [
       {
-        kind: "p",
+        kind: "p-image",
         text: "Voor een tussentijdse toets of praktijkexamen bij het CBR stelt de examinator vrijwel altijd een aantal controlerende vragen over de auto — vooral om het gesprek te openen en spanning te halen uit het begin. Als je vrijwel niets kunt aanwijzen, voelt zo’n onderdeel juist tegenstrijdig nerveus. Bij Rijschool Vlam daarom deze praktische uitleg, zodat je zelf alle antwoorden weet óf kunt inschatten.",
+        src: "/verrichtingen/bandencontrole.jpg",
+        alt: "Bandencontrole: band, profiel en velg van dichtbij",
+        width: 498,
+        height: 340,
       },
       { kind: "h2", text: "Bandencontrole" },
       {

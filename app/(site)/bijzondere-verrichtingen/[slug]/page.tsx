@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Sparkles } from "lucide-react";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CtaBand } from "@/components/site/cta-band";
 import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
+import { LightboxImage } from "@/components/site/lightbox-image";
 import { Section } from "@/components/site/section";
 import {
   BIJZONDERE_VERRICHTING_ITEMS,
@@ -38,6 +38,52 @@ function VerrichtingBody({
               >
                 {block.text}
               </p>
+            );
+          case "float-image":
+            return (
+              <figure
+                key={i}
+                className="not-prose my-3 md:clear-right md:float-right md:mt-0 md:ml-7 md:-mb-6 md:w-[min(21rem,40%)]"
+              >
+                <div className="border-border bg-muted/40 overflow-hidden rounded-2xl border shadow-sm ring-1 ring-black/[0.04] md:rounded-3xl">
+                  <LightboxImage
+                    src={block.src}
+                    alt={block.alt}
+                    width={block.width}
+                    height={block.height}
+                    sizes="(max-width: 768px) 94vw, 360px"
+                    className="h-auto w-full"
+                  />
+                </div>
+              </figure>
+            );
+          case "p-image":
+            return (
+              <div
+                key={i}
+                className="grid items-start gap-4 md:grid-cols-[1.6fr_1fr] md:gap-6"
+              >
+                <div className="max-w-prose space-y-4 text-[1.02rem] leading-[1.7] text-muted-foreground md:text-[1.0625rem] md:leading-relaxed">
+                  {block.text
+                    .split("\n\n")
+                    .filter(Boolean)
+                    .map((t, j) => (
+                      <p key={j}>{t}</p>
+                    ))}
+                </div>
+                <figure className="not-prose md:pt-6">
+                  <div className="border-border bg-muted/40 w-full overflow-hidden rounded-2xl border shadow-sm ring-1 ring-black/[0.04] md:rounded-3xl">
+                    <LightboxImage
+                      src={block.src}
+                      alt={block.alt}
+                      width={block.width}
+                      height={block.height}
+                      sizes="(max-width: 768px) 94vw, 360px"
+                      className="h-auto w-full"
+                    />
+                  </div>
+                </figure>
+              </div>
             );
           case "h2": {
             const isFirstHeading = !blocks.slice(0, i).some((x) => x.kind === "h2");
@@ -80,10 +126,47 @@ function VerrichtingBody({
                 ))}
               </ul>
             );
+          case "image":
+            return (
+              <figure key={i} className="not-prose my-3">
+                <div className="border-border bg-muted/40 mx-auto w-full max-w-xl overflow-hidden rounded-2xl border shadow-sm ring-1 ring-black/[0.04] md:rounded-3xl">
+                  <LightboxImage
+                    src={block.src}
+                    alt={block.alt}
+                    width={block.width}
+                    height={block.height}
+                    sizes="(max-width: 896px) 94vw, 640px"
+                    className="h-auto w-full"
+                  />
+                </div>
+              </figure>
+            );
+          case "image-row":
+            return (
+              <div
+                key={i}
+                className="not-prose mx-auto grid w-full max-w-5xl grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4"
+              >
+                {block.images.map((img) => (
+                  <figure key={img.src} className="m-0">
+                    <div className="border-border bg-muted/40 overflow-hidden rounded-2xl border shadow-sm ring-1 ring-black/[0.04] md:rounded-3xl">
+                      <LightboxImage
+                        src={img.src}
+                        alt={img.alt}
+                        width={img.width}
+                        height={img.height}
+                        sizes="(max-width: 768px) 46vw, (max-width: 1280px) 22vw, 240px"
+                        className="h-auto w-full"
+                      />
+                    </div>
+                  </figure>
+                ))}
+              </div>
+            );
           case "embed-youtube":
             if (!youtubeId) return null;
             return (
-              <figure key={i} className="not-prose my-2">
+              <figure key={i} className="not-prose clear-both my-2">
                 <div
                   className="border-border bg-foreground/[0.03] relative aspect-video w-full overflow-hidden rounded-2xl border shadow-[0_20px_50px_-20px_rgba(0,0,0,0.18)] ring-1 ring-primary/15 md:rounded-3xl"
                 >
@@ -233,8 +316,8 @@ export default async function BijzondereVerrichtingDetailPage(props: PageProps) 
 
               {item.imageSrc && !wideLandscapeHero ? (
                 <div className="flex justify-center lg:col-span-5 lg:justify-end lg:pt-2">
-                  <figure className="border-border bg-muted/40 w-full max-w-[min(100%,420px)] rounded-2xl border p-3 shadow-md ring-1 ring-black/[0.04] sm:p-4 md:max-w-[min(100%,460px)] md:rounded-3xl lg:max-w-none lg:p-5">
-                    <Image
+                  <figure className="border-border bg-muted/40 w-full max-w-[min(100%,420px)] overflow-hidden rounded-2xl border p-3 shadow-md ring-1 ring-black/[0.04] sm:max-w-[min(100%,460px)] sm:p-4 md:rounded-3xl lg:max-w-none lg:p-5">
+                    <LightboxImage
                       src={item.imageSrc}
                       alt={item.imageAlt ?? item.title}
                       width={item.imageWidth ?? 1200}
@@ -250,9 +333,9 @@ export default async function BijzondereVerrichtingDetailPage(props: PageProps) 
                   {item.imageGallery.map((img) => (
                     <figure
                       key={img.src}
-                      className="border-border bg-muted/40 mx-auto w-full max-w-[min(100%,420px)] rounded-2xl border p-3 shadow-md ring-1 ring-black/[0.04] sm:p-4 md:max-w-[min(100%,460px)] md:rounded-3xl lg:mx-0 lg:ml-auto lg:max-w-full lg:p-5"
+                      className="border-border bg-muted/40 mx-auto w-full max-w-[min(100%,420px)] overflow-hidden rounded-2xl border p-3 shadow-md ring-1 ring-black/[0.04] sm:p-4 md:max-w-[min(100%,460px)] md:rounded-3xl lg:mx-0 lg:ml-auto lg:max-w-full lg:p-5"
                     >
-                      <Image
+                      <LightboxImage
                         src={img.src}
                         alt={img.alt}
                         width={img.width}
@@ -268,14 +351,19 @@ export default async function BijzondereVerrichtingDetailPage(props: PageProps) 
             </div>
 
             {item.imageSrc && wideLandscapeHero ? (
-              <figure className="border-border bg-muted/40 relative mx-auto mt-10 w-full max-w-4xl rounded-2xl border p-4 shadow-md ring-1 ring-black/[0.04] sm:p-5 md:mt-11 md:max-w-none md:rounded-3xl xl:max-w-[min(100%,58rem)]">
-                <Image
+              <figure className="border-border bg-muted/40 relative mx-auto mt-10 w-full max-w-4xl overflow-hidden rounded-2xl border p-4 shadow-md ring-1 ring-black/[0.04] sm:mt-11 sm:p-5 md:max-w-none md:rounded-3xl xl:max-w-[min(100%,58rem)]">
+                <LightboxImage
                   src={item.imageSrc}
                   alt={item.imageAlt ?? item.title}
                   width={item.imageWidth ?? 1200}
                   height={item.imageHeight ?? 800}
                   sizes="(max-width: 896px) 94vw, (max-width: 1280px) 92vw, 1024px"
-                  className="h-auto w-full rounded-xl md:rounded-2xl"
+                  className={cn(
+                    "w-full rounded-xl md:rounded-2xl",
+                    item.heroImageFit === "contain"
+                      ? "h-auto object-contain"
+                      : "h-[320px] object-cover md:h-[360px] lg:h-[420px]",
+                  )}
                   priority
                 />
               </figure>
@@ -283,11 +371,7 @@ export default async function BijzondereVerrichtingDetailPage(props: PageProps) 
           </div>
 
           {hasRichContent ? (
-            <article className="border-border/80 bg-card/90 relative mt-8 rounded-2xl border p-6 shadow-[0_1px_0_0_var(--border)] backdrop-blur-sm sm:p-8 md:mt-10 md:rounded-3xl md:p-10 md:shadow-md md:ring-1 md:ring-primary/[0.06]">
-              <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent"
-                aria-hidden
-              />
+            <article className="mt-10 sm:mt-12">
               <VerrichtingBody
                 blocks={item.body!}
                 youtubeId={item.youtubeId}

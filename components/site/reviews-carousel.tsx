@@ -97,7 +97,7 @@ export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
         type="button"
         variant="outline"
         size="icon-lg"
-        className="shrink-0 rounded-full"
+        className="hidden shrink-0 rounded-full sm:inline-flex"
         aria-label="Vorige recensies"
         disabled={!canPrev}
         onClick={() => scrollByOne(-1)}
@@ -117,7 +117,7 @@ export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
             <li
               key={review.id}
               data-review-slide
-              className="w-72 shrink-0 snap-start sm:w-80 md:w-[22rem]"
+              className="w-[min(22rem,calc(100vw-3rem))] shrink-0 snap-start sm:w-80 md:w-[22rem]"
             >
               <figure className="bg-card border-border flex h-full flex-col rounded-xl border p-5 shadow-sm sm:p-6">
                 <StarRating rating={review.rating} />
@@ -146,7 +146,7 @@ export function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
         type="button"
         variant="outline"
         size="icon-lg"
-        className="shrink-0 rounded-full"
+        className="hidden shrink-0 rounded-full sm:inline-flex"
         aria-label="Volgende recensies"
         disabled={!canNext}
         onClick={() => scrollByOne(1)}

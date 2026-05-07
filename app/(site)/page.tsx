@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   BookOpen,
   Car,
+  Clock,
   Gauge,
   ShieldCheck,
   Users,
@@ -15,6 +16,7 @@ import { FadeIn } from "@/components/site/fade-in";
 import { FaqAccordion } from "@/components/site/faq-accordion";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { ReviewsSection } from "@/components/site/reviews-section";
+import { ZoomableImage } from "@/components/site/zoomable-image";
 import { Section, SectionHeading } from "@/components/site/section";
 import { FAQ_ITEMS, FAQ_PREVIEW_COUNT } from "@/lib/faq-data";
 import { CBR_UTRECHT, PHONE_DISPLAY, PHONE_E164 } from "@/lib/constants";
@@ -153,18 +155,76 @@ export default function HomePage() {
       <ReviewsSection />
 
       <Section className="bg-muted/40">
-        <FadeIn>
-          <div className="border-border overflow-hidden rounded-2xl border shadow-sm">
-            <Image
-              src="/site/sectieutrecht.png"
-              alt="Dekking: Rijschool Vlam in heel Utrecht — wij halen je op in alle wijken."
-              width={1536}
-              height={1024}
-              className="h-auto w-full"
-              sizes="(max-width: 1280px) 100vw, 1280px"
-            />
-          </div>
-        </FadeIn>
+        <div className="grid items-center gap-12 lg:grid-cols-[0.85fr_1.45fr] lg:gap-16">
+          <FadeIn>
+            <div>
+              <p className="text-primary mb-4 text-sm font-semibold tracking-wide uppercase">
+                RIJSCHOOL IN HEEL UTRECHT
+              </p>
+              <h2 className="text-foreground text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
+                <span className="block">Waar je ook woont</span>
+                <span className="block">in Utrecht,</span>
+                <span className="text-primary block">wij halen je op.</span>
+              </h2>
+              <div className="text-muted-foreground mt-6 max-w-xl space-y-4 text-base leading-relaxed">
+                <p>
+                  Of je nu in de stad woont of in een van de wijken eromheen, onze
+                  instructeurs komen naar jou toe. Zo start jij je rijles altijd dichtbij
+                  en zonder gedoe.
+                </p>
+              </div>
+
+              <div className="mt-8 space-y-5">
+                <div className="flex items-start gap-4">
+                  <div className="bg-background text-primary border-border mt-0.5 flex size-12 shrink-0 items-center justify-center rounded-full border shadow-sm">
+                    <Car className="size-5" aria-hidden />
+                  </div>
+                  <div>
+                    <p className="text-foreground font-semibold">Ophalen waar jij bent</p>
+                    <p className="text-muted-foreground text-sm">Altijd in de buurt</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-background text-primary border-border mt-0.5 flex size-12 shrink-0 items-center justify-center rounded-full border shadow-sm">
+                    <Clock className="size-5" aria-hidden />
+                  </div>
+                  <div>
+                    <p className="text-foreground font-semibold">Flexibele lestijden</p>
+                    <p className="text-muted-foreground text-sm">
+                      Overdag, &apos;s avonds en in het weekend
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-background text-primary border-border mt-0.5 flex size-12 shrink-0 items-center justify-center rounded-full border shadow-sm">
+                    <Users className="size-5" aria-hidden />
+                  </div>
+                  <div>
+                    <p className="text-foreground font-semibold">Persoonlijke begeleiding</p>
+                    <p className="text-muted-foreground text-sm">
+                      Van eerste les tot rijbewijs
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.08}>
+            <div className="border-border overflow-hidden rounded-2xl border bg-card shadow-sm">
+              <ZoomableImage
+                src="/site/utrechtmappins.png"
+                alt="Kaart: Rijschool Vlam in heel Utrecht — wij halen je op in alle wijken."
+                width={1536}
+                height={1024}
+                className="h-auto w-full"
+                sizes="(max-width: 1280px) 100vw, 1280px"
+              />
+            </div>
+          </FadeIn>
+        </div>
       </Section>
 
       <GraduatePhotosSection />

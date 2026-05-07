@@ -1,4 +1,4 @@
-import { ADDRESS, PHONE_E164, SITE_NAME, SITE_URL } from "@/lib/constants";
+import { ADDRESS, PHONE_E164, SITE_LOGO, SITE_NAME, SITE_URL } from "@/lib/constants";
 
 export function JsonLd() {
   const data = {
@@ -6,6 +6,7 @@ export function JsonLd() {
     "@type": "DrivingSchool",
     name: SITE_NAME,
     url: SITE_URL,
+    logo: `${SITE_URL.replace(/\/$/, "")}${SITE_LOGO.src}`,
     telephone: PHONE_E164,
     address: {
       "@type": "PostalAddress",

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 
 import { JsonLd } from "@/components/site/json-ld";
-import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
+import { SITE_LOGO, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
 
 import "./globals.css";
 
@@ -39,6 +39,21 @@ export const metadata: Metadata = {
     description:
       "Rijschool Utrecht: professionele rijlessen, duidelijke tarieven en flexibele lestijden.",
     url: SITE_URL,
+    images: [
+      {
+        url: SITE_LOGO.src,
+        width: SITE_LOGO.width,
+        height: SITE_LOGO.height,
+        alt: `${SITE_NAME} logo`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} | ${SITE_TAGLINE}`,
+    description:
+      "Rijschool Utrecht: professionele rijlessen, duidelijke tarieven en flexibele lestijden.",
+    images: [SITE_LOGO.src],
   },
   alternates: {
     canonical: "/",

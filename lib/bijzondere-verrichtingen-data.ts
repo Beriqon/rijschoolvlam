@@ -22,6 +22,8 @@ export type BijzondereVerrichtingItem = {
   teaser: string;
   /** Overzichtskaart: `cover` = headervulling; standaard `contain` (o.a. diagrammen). */
   cardImageFit?: "cover" | "contain";
+  /** Alleen voor de overzichtskaart (bijv. cover terwijl de detailpagina `imageGallery` gebruikt). */
+  cardImageSrc?: string;
   imageSrc?: string;
   imageAlt?: string;
   /** Natuurlijke afmetingen van `imageSrc` (voor volledige weergave zonder crop). */
@@ -350,10 +352,10 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Recht achteruit",
     teaser:
       "Stap voor stap achteruit in een rechte lijn: koppel op het aangrijpingspunt weinig corrigerend sturen en de stoeprand in de buitenspiegel op circa 20 cm houden.",
-    imageSrc: "/verrichtingen/rechtachteruit.gif",
-    imageAlt: "Animation: rechts achteruit rijden langs de stoep",
-    imageWidth: 300,
-    imageHeight: 300,
+    imageSrc: "/verrichtingen/cover-rechtachteruit.png",
+    imageAlt: "Achteruit in een rechte lijn langs de stoeprand",
+    imageWidth: 1536,
+    imageHeight: 1024,
     youtubeId: "3GIA4S6yuSQ",
     body: [
       {
@@ -374,10 +376,10 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Hellingproef",
     teaser:
       "Gestopt op een helling wegrijden zonder terug te rollen: koppeling en gas op het punt, voorrang laten gaan rem los en gesteund wegrijden.",
-    imageSrc: "/verrichtingen/hellingproef.jpg",
-    imageAlt: "Rijbewijs manoeuvre hellingproef langs de stoeprand",
-    imageWidth: 223,
-    imageHeight: 300,
+    imageSrc: "/verrichtingen/cover-hellingproef.png",
+    imageAlt: "Auto op helling langs de stoeprand — hellingproef",
+    imageWidth: 1536,
+    imageHeight: 1024,
     youtubeId: "jt7ypsK0AAE",
     body: [
       {
@@ -401,6 +403,7 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Dashboard",
     teaser:
       "Waarschuwingslampjes en bedieningsknappen kennen: de examinator kan tijdens een toets of examen inhoudelijke vragen over het dashboard en de techniek stellen.",
+    cardImageSrc: "/verrichtingen/cover-dashboard.png",
     imageGallery: [
       {
         src: "/verrichtingen/dashboard1.webp",
@@ -434,10 +437,10 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Motorcompartiment",
     teaser:
       "Video en beeld over het motorcompartiment ter voorbereiding op vragen tijdens een toets (oliepeilstok, koelvloeistof enz.).",
-    imageSrc: "/verrichtingen/motorcontrole.jpg",
-    imageAlt: "Motorkast open onder de motorkap",
-    imageWidth: 1030,
-    imageHeight: 590,
+    imageSrc: "/verrichtingen/cover-motorcompartimet.png",
+    imageAlt: "Open motorkap, motorcompartiment voor examenvragen",
+    imageWidth: 1536,
+    imageHeight: 1024,
     youtubeId: "--mbTku7p98",
     body: [
       {
@@ -453,10 +456,10 @@ export const BIJZONDERE_VERRICHTING_ITEMS: BijzondereVerrichtingItem[] = [
     title: "Bandencontrole",
     teaser:
       "Voor een TTT of praktijkexamen: verkennende vragen over je auto ontspannen houden. Profiel, spanning, ventielkap en beschadigingen — wat je wilt weten over banden.",
-    imageSrc: "/verrichtingen/bandencontrole.jpg",
-    imageAlt: "Inspectie van autobanden en velg",
-    imageWidth: 498,
-    imageHeight: 340,
+    imageSrc: "/verrichtingen/cover-bandecontrole.png",
+    imageAlt: "Inspectie van autobanden en velg voor het examengesprek",
+    imageWidth: 1536,
+    imageHeight: 1024,
     body: [
       {
         kind: "p",

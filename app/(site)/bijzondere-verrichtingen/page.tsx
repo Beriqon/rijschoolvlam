@@ -132,7 +132,7 @@ export default function BijzondereVerrichtingenPage() {
           <ul className="grid list-none grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {BIJZONDERE_VERRICHTING_ITEMS.map((item) => {
               const galleryFirst = item.imageGallery?.[0];
-              const thumbSrc = item.imageSrc ?? galleryFirst?.src;
+              const thumbSrc = item.cardImageSrc ?? item.imageSrc ?? galleryFirst?.src;
               const thumbAlt = item.imageAlt ?? galleryFirst?.alt ?? item.title;
               const cardFit = item.cardImageFit ?? "contain";
               return (

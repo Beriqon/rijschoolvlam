@@ -1,3 +1,6 @@
+import { mapCmsReviewsToReviews } from "@/lib/cms/map-reviews";
+import { getReviews } from "@/lib/cms/queries";
+
 export type Review = {
   id: string;
   rating: 1 | 2 | 3 | 4 | 5;
@@ -7,6 +10,7 @@ export type Review = {
   context?: string;
 };
 
+/** Statische backup wanneer het CMS niet bereikbaar is of geen geldige reviews teruggeeft. */
 export const REVIEWS: Review[] = [
   {
     id: "lucca-de-jong",
@@ -163,3 +167,17 @@ export const REVIEWS: Review[] = [
     author: "Roos Spruijt",
   },
 ];
+
+export async function getReviewsWithFallback(): Promise<Review[]> {
+  try {
+    const nodes = await getReviews();
+    const mapped = mapCmsReviewsToReviews(nodes);
+    if (mapped.length > 0) {
+      return mapped;
+    }
+  } catch {
+    // CMS onbereikbaar of query mislukt → statische reviews
+  }
+
+  return REVIEWS;
+}

@@ -1,3 +1,6 @@
+import { mapCmsGalleryImagesToSlides } from "@/lib/cms/map-gallery";
+import { getGalleryImages } from "@/lib/cms/queries";
+
 export type GraduatePhotoSlide = {
   id: string;
   /**
@@ -33,6 +36,7 @@ function geslaagdenSrc(filename: string) {
   return `/geslaagden/${encodeURIComponent(filename)}`;
 }
 
+/** Statische backup wanneer het CMS niet bereikbaar is of geen geldige foto’s teruggeeft. */
 export const GRADUATE_PHOTOS: GraduatePhotoSlide[] = GESLAAGDEN_FILENAMES.map(
   (name, i) => ({
     id: `g${i + 1}`,
@@ -40,3 +44,19 @@ export const GRADUATE_PHOTOS: GraduatePhotoSlide[] = GESLAAGDEN_FILENAMES.map(
     alt: `Geslaagde leerling bij Rijschool Vlam — foto ${i + 1}`,
   })
 );
+
+export async function getGraduatePhotosWithFallback(): Promise<
+  GraduatePhotoSlide[]
+> {
+  try {
+    const nodes = await getGalleryImages();
+    const mapped = mapCmsGalleryImagesToSlides(nodes);
+    if (mapped.length > 0) {
+      return mapped;
+    }
+  } catch {
+    // CMS onbereikbaar of query mislukt → statische geslaagdenfoto’s
+  }
+
+  return GRADUATE_PHOTOS;
+}

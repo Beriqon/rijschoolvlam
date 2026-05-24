@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { FAQ_ANSWER_HTML_CLASS } from "@/lib/cms/faq-html";
 import type { FaqItem } from "@/lib/faq-data";
 
 /** Internal route token in FAQ copy; rendered as readable “tarieven” linking to `/tarieven`. */
@@ -233,6 +234,36 @@ function renderAnswerTextChunks(content: string, keyPrefix: string) {
   );
 }
 
+function renderFaqAnswer(item: FaqItem) {
+  if (item.answerIsHtml) {
+    return (
+      <div
+        className={FAQ_ANSWER_HTML_CLASS}
+        dangerouslySetInnerHTML={{ __html: item.answer }}
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-4 pt-1 [&>p:first-child]:mt-0">
+      {splitAnswerWithEmbeds(item.answer).map((chunk, chunkIdx) =>
+        chunk.type === "text" ? (
+          <Fragment key={`${item.id}-c${chunkIdx}`}>
+            {renderAnswerTextChunks(chunk.content, `${item.id}-c${chunkIdx}`)}
+          </Fragment>
+        ) : (
+          <FaqYoutubeEmbed
+            key={`${item.id}-yt-${chunk.videoId}-${chunkIdx}`}
+            videoId={chunk.videoId}
+            startSeconds={chunk.startSeconds}
+            title="YouTube-video"
+          />
+        ),
+      )}
+    </div>
+  );
+}
+
 export function FaqAccordion({ items }: { items: FaqItem[] }) {
   return (
     <Accordion type="single" collapsible className="mx-auto w-full max-w-4xl">
@@ -242,22 +273,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
             {item.question}
           </AccordionTrigger>
           <AccordionContent className="text-base leading-relaxed">
-            <div className="space-y-4 pt-1 [&>p:first-child]:mt-0">
-              {splitAnswerWithEmbeds(item.answer).map((chunk, chunkIdx) =>
-                chunk.type === "text" ? (
-                  <Fragment key={`${item.id}-c${chunkIdx}`}>
-                    {renderAnswerTextChunks(chunk.content, `${item.id}-c${chunkIdx}`)}
-                  </Fragment>
-                ) : (
-                  <FaqYoutubeEmbed
-                    key={`${item.id}-yt-${chunk.videoId}-${chunkIdx}`}
-                    videoId={chunk.videoId}
-                    startSeconds={chunk.startSeconds}
-                    title="YouTube-video"
-                  />
-                ),
-              )}
-            </div>
+            {renderFaqAnswer(item)}
             {item.answerImage ? (
               <div className="relative mt-6 max-w-2xl overflow-hidden rounded-lg border border-border/60 bg-muted/30">
                 <Image

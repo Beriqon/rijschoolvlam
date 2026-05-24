@@ -22,7 +22,11 @@ const PACKAGE_OPTIONS = [
 const field =
   "border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
 
-export function ContactForm() {
+type ContactFormProps = {
+  contactEmail?: string;
+};
+
+export function ContactForm({ contactEmail = CONTACT_EMAIL }: ContactFormProps) {
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -67,7 +71,7 @@ export function ContactForm() {
 
     const subject = encodeURIComponent(mailSubjectParts.join(" — "));
     const mailBody = encodeURIComponent(body);
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${mailBody}`;
+    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${mailBody}`;
     setSubmitted(true);
   }
 
@@ -266,8 +270,8 @@ export function ContactForm() {
       {submitted ? (
         <p className="text-muted-foreground text-sm">
           Als je mailprogramma niet opent, mail dan handmatig naar{" "}
-          <a className="text-primary font-medium underline" href={`mailto:${CONTACT_EMAIL}`}>
-            {CONTACT_EMAIL}
+          <a className="text-primary font-medium underline" href={`mailto:${contactEmail}`}>
+            {contactEmail}
           </a>
           .
         </p>

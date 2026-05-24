@@ -8,11 +8,13 @@ import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section, SectionHeading } from "@/components/site/section";
 import { CANCELLATION_HOURS, LESSON_PRICE_EUR } from "@/lib/constants";
+import { withCanonical } from "@/lib/metadata";
+import { getSiteConfig } from "@/lib/site-config";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/tarieven", {
   title: "Tarieven — Rijschool Vlam Utrecht",
   description: `Bekijk onze tarieven: losse rijles €${LESSON_PRICE_EUR},- (60 min) en rijlespakketten inclusief CBR-praktijkexamen. Transparant, zonder inschrijfgeld.`,
-};
+});
 
 const packageFeatures = [
   "Ervaren instructeurs",
@@ -21,64 +23,6 @@ const packageFeatures = [
   "Flexibele lestijden",
   "Geen inschrijfgeld",
   "Vrijblijvende proefles",
-] as const;
-
-const packages = [
-  { name: "Pakket 1", price: 1120, hours: 10, highlight: false },
-  { name: "Pakket 2", price: 1900, hours: 20, highlight: true },
-  { name: "Pakket 3", price: 2650, hours: 30, highlight: false },
-  { name: "Pakket 4", price: 3400, hours: 40, highlight: false },
-] as const;
-
-const extras = [
-  {
-    title: "Bromfietslessen",
-    description:
-      "Het oefenen op gebied van praktijk en theorie kost slechts €275,-. Je hebt ook geweldige examen garantie.",
-    priceLabel: "€275,-",
-  },
-  {
-    title: "Opfriscursus",
-    description:
-      "Heb je moeite met bepaalde onderdelen in het verkeer doordat je lang niet hebt gereden? Kies dan voor onze opfriscursus.",
-    priceLabel: "Op aanvraag",
-  },
-  {
-    title: "Losse rijlessen",
-    description:
-      "Zit je krap bij kas? Elke rijles kun je bij ons apart afrekenen. Losse rijlessen kost €79,-.",
-    priceLabel: `€${LESSON_PRICE_EUR},-`,
-  },
-  {
-    title: "Tussentijdse toets",
-    description:
-      "Voor een tussentijdse toets van het CBR betaal je €300,- incl. de huur van de auto.",
-    priceLabel: "€300,-",
-  },
-  {
-    title: "Los rij examen",
-    description:
-      "Voor een praktijk examen van het CBR betaal je €350,-. De huur van de auto is dan meegerekend.",
-    priceLabel: "€350,-",
-  },
-  {
-    title: "Faalangst examen",
-    description:
-      "Voor een faalangst examen van het CBR betaal je €470,-. De huur van de auto is dan meegerekend.",
-    priceLabel: "€470,-",
-  },
-  {
-    title: "Theorie pakket",
-    description:
-      "Voor extra uitleg en theorie examen van het CBR betaal je €160,-.",
-    priceLabel: "€160,-",
-  },
-  {
-    title: "Examengarantie",
-    description:
-      "Wil je examengarantie? Neem contact met ons op en vraag naar de voorwaarden.",
-    priceLabel: "Op aanvraag",
-  },
 ] as const;
 
 const HERO_TRUST_POINTS = [
@@ -106,7 +50,10 @@ const trialLessonSteps = [
   },
 ] as const;
 
-export default function TarievenPage() {
+export default async function TarievenPage() {
+  const site = await getSiteConfig();
+  const { packages, extras, lessonPriceLabel } = site;
+
   return (
     <>
       <Section className="pt-12 pb-14 md:pt-16 md:pb-20">
@@ -154,7 +101,7 @@ export default function TarievenPage() {
                     Losse rijles
                   </p>
                   <p className="font-heading text-foreground mt-3 text-4xl font-semibold tabular-nums tracking-tight md:text-[2.75rem]">
-                    €{LESSON_PRICE_EUR},-
+                    {lessonPriceLabel}
                   </p>
                   <p className="text-muted-foreground mt-1 text-sm font-medium">
                     per les · 60 minuten

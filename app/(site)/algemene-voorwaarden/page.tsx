@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section, SectionHeading } from "@/components/site/section";
+import { withCanonical } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/algemene-voorwaarden", {
   title: "Algemene voorwaarden",
   description: "Algemene voorwaarden van Rijschool Vlam Utrecht.",
-};
+});
 
 const TERMS_TEXT = `Voorwaarden
 Algemene Voorwaarden Autorijschool Vlam

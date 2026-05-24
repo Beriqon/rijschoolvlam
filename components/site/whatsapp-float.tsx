@@ -13,14 +13,22 @@ function WhatsAppGlyph({ className }: { className?: string }) {
   );
 }
 
-export function WhatsAppFloat() {
+type WhatsAppFloatProps = {
+  phoneDisplay?: string;
+  whatsappUrl?: string;
+};
+
+export function WhatsAppFloat({
+  phoneDisplay = PHONE_DISPLAY,
+  whatsappUrl = WHATSAPP_URL,
+}: WhatsAppFloatProps) {
   return (
     <a
-      href={WHATSAPP_URL}
+      href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring fixed bottom-6 right-6 z-50 flex size-14 items-center justify-center rounded-full shadow-lg ring-offset-2 ring-offset-background transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2"
-      aria-label={`WhatsApp ${SITE_NAME} op ${PHONE_DISPLAY}`}
+      aria-label={`WhatsApp ${SITE_NAME} op ${phoneDisplay}`}
     >
       <WhatsAppGlyph className="size-7" />
     </a>

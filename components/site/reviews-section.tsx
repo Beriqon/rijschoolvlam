@@ -1,6 +1,6 @@
 import { Section, SectionHeading } from "@/components/site/section";
 import { ReviewsCarousel } from "@/components/site/reviews-carousel";
-import { REVIEWS } from "@/lib/reviews-data";
+import { getReviewsWithFallback } from "@/lib/reviews-data";
 
 const GOOGLE_REVIEWS_URL =
   "https://www.google.com/search?sca_esv=3fc7abff1a42fafb&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOZtWYgukX6fFYqiX1BDjzz5QG1Pc6C7_dt_6BYNrjk--gtPOkmyyoB6scDS-FBIPUzbg4OwaSMzgWDi_K0O6ZPXyfsQ-cowYdWms7rZ2dCiqQD9--tvTT3bR5K4PypirBoH6zso%3D&q=Rijschool+Utrecht+%7C+Rijschool+Vlam+Reviews&sa=X&ved=2ahUKEwjSs77l6aSUAxV14wIHHbIaMFcQ0bkNegQIKhAH&biw=1536&bih=730&dpr=1.25";
@@ -29,7 +29,9 @@ function ReviewPill({
   return <div className={className}>{children}</div>;
 }
 
-export function ReviewsSection() {
+export async function ReviewsSection() {
+  const reviews = await getReviewsWithFallback();
+
   return (
     <Section>
       <SectionHeading
@@ -79,7 +81,7 @@ export function ReviewsSection() {
         </a>
         .
       </p>
-      <ReviewsCarousel reviews={REVIEWS} />
+      <ReviewsCarousel reviews={reviews} />
     </Section>
   );
 }

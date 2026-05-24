@@ -1,15 +1,20 @@
+import { mapCmsFaqsToFaqItems } from "@/lib/cms/map-faqs";
+import { getFaqs } from "@/lib/cms/queries";
 import { LESSON_PRICE_EUR } from "@/lib/constants";
 
 export type FaqItem = {
   id: string;
   question: string;
   answer: string;
+  /** CMS-antwoord als WordPress HTML; anders platte tekst met FAQ-tokens. */
+  answerIsHtml?: boolean;
   answerImage?: {
     src: string;
     alt: string;
   };
 };
 
+/** Statische backup wanneer het CMS niet bereikbaar is of geen geldige FAQ’s teruggeeft. */
 export const FAQ_ITEMS: FaqItem[] = [
   {
     id: "lesduur-utrecht",
@@ -189,3 +194,17 @@ Bij Rijschool Vlam bereiden we je voor op elk aspect van dit examen, zodat je me
 ];
 
 export const FAQ_PREVIEW_COUNT = 6;
+
+export async function getFaqsWithFallback(): Promise<FaqItem[]> {
+  try {
+    const nodes = await getFaqs();
+    const mapped = mapCmsFaqsToFaqItems(nodes);
+    if (mapped.length > 0) {
+      return mapped;
+    }
+  } catch {
+    // CMS onbereikbaar of query mislukt → statische FAQ’s
+  }
+
+  return FAQ_ITEMS;
+}

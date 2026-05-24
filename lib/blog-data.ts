@@ -1,14 +1,22 @@
+import { mapCmsBlogPostToDetail, mapCmsBlogPostsToListItems } from "@/lib/cms/map-blog";
+import { getBlogPosts, getBlogPostBySlug as getCmsBlogPostBySlug } from "@/lib/cms/queries";
+
 export type BlogPost = {
   slug: string;
   title: string;
   excerpt: string;
   content?: readonly BlogContentNode[];
   imageSrc: string;
-  /** Bij `object-cover` (blogoverzicht): welk deel van de foto zichtbaar blijft. */
+  /**
+   * `object-position` voor blog cards (`object-cover`).
+   * CMS featured images met tekst links: `"left"`.
+   */
   coverImageAnchor?: "left" | "center" | "right";
   publishedAt: string; // ISO date
   readTimeMinutes: number;
   tags?: readonly string[];
+  /** WordPress HTML body; detailpagina rendert dit i.p.v. `content` nodes. */
+  htmlContent?: string;
 };
 
 export type BlogContentNode =
@@ -25,14 +33,15 @@ export type BlogListItem = string | readonly BlogTextPart[];
 export function blogCoverImageAnchorClass(anchor?: BlogPost["coverImageAnchor"]) {
   switch (anchor) {
     case "left":
-      return "object-left";
+      return "object-[left_center]";
     case "right":
-      return "object-right";
+      return "object-[right_center]";
     default:
       return "object-center";
   }
 }
 
+/** Statische backup wanneer het CMS niet bereikbaar is of geen geldige posts teruggeeft. */
 export const BLOG_POSTS: readonly BlogPost[] = [
   {
     slug: "voordelen-van-een-tussentijdse-toets",
@@ -1821,5 +1830,37 @@ export const BLOG_POSTS: readonly BlogPost[] = [
 
 export function getBlogPostBySlug(slug: string) {
   return BLOG_POSTS.find((post) => post.slug === slug);
+}
+
+export async function getBlogPostBySlugWithFallback(
+  slug: string,
+): Promise<BlogPost | undefined> {
+  try {
+    const node = await getCmsBlogPostBySlug(slug);
+    if (node) {
+      const mapped = mapCmsBlogPostToDetail(node);
+      if (mapped) {
+        return mapped;
+      }
+    }
+  } catch {
+    // CMS onbereikbaar of query mislukt → statische post
+  }
+
+  return getBlogPostBySlug(slug);
+}
+
+export async function getBlogPostsForOverviewWithFallback(): Promise<BlogPost[]> {
+  try {
+    const nodes = await getBlogPosts();
+    const mapped = mapCmsBlogPostsToListItems(nodes);
+    if (mapped.length > 0) {
+      return mapped;
+    }
+  } catch {
+    // CMS onbereikbaar of query mislukt → statische lijst
+  }
+
+  return [...BLOG_POSTS];
 }
 

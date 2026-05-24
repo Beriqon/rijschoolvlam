@@ -16,6 +16,12 @@ import {
   SITE_NAME,
 } from "@/lib/constants";
 
+type SiteFooterProps = {
+  phoneDisplay?: string;
+  phoneE164?: string;
+  contactEmail?: string;
+};
+
 function FacebookIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -42,7 +48,11 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({
+  phoneDisplay = PHONE_DISPLAY,
+  phoneE164 = PHONE_E164,
+  contactEmail = CONTACT_EMAIL,
+}: SiteFooterProps) {
   return (
     <footer className="border-border bg-card text-card-foreground border-t">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
@@ -68,13 +78,13 @@ export function SiteFooter() {
               persoonlijke begeleiding tot je praktijkexamen bij het CBR.
             </p>
             <a
-              href={`tel:${PHONE_E164}`}
+              href={`tel:${phoneE164}`}
               className="text-primary mt-6 inline-flex items-center gap-2.5 text-sm font-semibold transition-colors hover:underline"
             >
               <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-lg">
                 <Phone className="size-4" aria-hidden />
               </span>
-              {PHONE_DISPLAY}
+              {phoneDisplay}
             </a>
           </div>
 
@@ -120,10 +130,10 @@ export function SiteFooter() {
                   <Mail className="size-4" aria-hidden />
                 </span>
                 <a
-                  href={`mailto:${CONTACT_EMAIL}`}
+                  href={`mailto:${contactEmail}`}
                   className="text-muted-foreground hover:text-foreground min-w-0 break-words font-medium underline-offset-4 transition-colors hover:underline"
                 >
-                  {CONTACT_EMAIL}
+                  {contactEmail}
                 </a>
               </div>
               <div className="border-border text-muted-foreground border-t pt-5 text-xs leading-relaxed">

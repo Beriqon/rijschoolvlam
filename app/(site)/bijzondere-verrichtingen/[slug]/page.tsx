@@ -15,6 +15,7 @@ import {
   type BijzondereVerrichtingItem,
   type VerrichtingBodyBlock,
 } from "@/lib/bijzondere-verrichtingen-data";
+import { withCanonical } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
 function VerrichtingBody({
@@ -257,10 +258,10 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     };
   }
 
-  return {
+  return withCanonical(`/bijzondere-verrichtingen/${slug}`, {
     title: `${item.title} — Bijzondere verrichtingen | Rijschool Vlam`,
     description: item.teaser,
-  };
+  });
 }
 
 export default async function BijzondereVerrichtingDetailPage(props: PageProps) {

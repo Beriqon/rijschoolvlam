@@ -8,13 +8,17 @@ import { CtaBand } from "@/components/site/cta-band";
 import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section, SectionHeading } from "@/components/site/section";
-import { BLOG_POSTS, blogCoverImageAnchorClass } from "@/lib/blog-data";
+import {
+  blogCoverImageAnchorClass,
+  getBlogPostsForOverviewWithFallback,
+} from "@/lib/blog-data";
+import { withCanonical } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/blog", {
   title: "Blog — Rijschool Vlam",
   description:
     "Tips, uitleg en updates over rijlessen in Utrecht, het praktijkexamen en slim plannen richting je rijbewijs.",
-};
+});
 
 type PageProps = {
   searchParams: Promise<{ page?: string }>;
@@ -35,9 +39,15 @@ export default async function BlogPage(props: PageProps) {
   const { page } = await props.searchParams;
   const requestedPage = Number.parseInt(page ?? "1", 10);
 
-  const postsSorted = [...BLOG_POSTS].sort((a, b) =>
-    b.publishedAt.localeCompare(a.publishedAt),
-  );
+  const blogPosts = await getBlogPostsForOverviewWithFallback();
+  const postsSorted = [...blogPosts].sort((a, b) => {
+    if (a.publishedAt && b.publishedAt) {
+      return b.publishedAt.localeCompare(a.publishedAt);
+    }
+    if (a.publishedAt) return -1;
+    if (b.publishedAt) return 1;
+    return 0;
+  });
   const totalPages = Math.max(1, Math.ceil(postsSorted.length / PAGE_SIZE));
   const currentPage =
     Number.isFinite(requestedPage) && requestedPage > 0
@@ -78,8 +88,12 @@ export default async function BlogPage(props: PageProps) {
 
                   <div className="flex flex-1 flex-col p-6">
                     <div className="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                      <span>{formatPublishedAt(post.publishedAt)}</span>
-                      <span aria-hidden>•</span>
+                      {post.publishedAt ? (
+                        <>
+                          <span>{formatPublishedAt(post.publishedAt)}</span>
+                          <span aria-hidden>•</span>
+                        </>
+                      ) : null}
                       <span>{post.readTimeMinutes} min</span>
                     </div>
 

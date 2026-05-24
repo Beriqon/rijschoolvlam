@@ -23,7 +23,19 @@ import {
 } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  phoneDisplay?: string;
+  phoneE164?: string;
+  primaryCtaText?: string;
+  primaryCtaHref?: string;
+};
+
+export function SiteHeader({
+  phoneDisplay = PHONE_DISPLAY,
+  phoneE164 = PHONE_E164,
+  primaryCtaText = "Gratis proefles",
+  primaryCtaHref = "/contact",
+}: SiteHeaderProps) {
   const pathname = usePathname();
 
   return (
@@ -71,19 +83,19 @@ export function SiteHeader() {
 
         <div className="hidden shrink-0 items-center justify-end gap-2 md:flex md:justify-self-end lg:gap-2.5">
           <Button size="default" className="shrink-0 text-[0.9375rem]" asChild>
-            <Link href="/contact">Gratis proefles</Link>
+            <Link href={primaryCtaHref}>{primaryCtaText}</Link>
           </Button>
           <Button size="default" variant="outline" className="shrink-0 text-[0.9375rem]" asChild>
-            <a href={`tel:${PHONE_E164}`}>
+            <a href={`tel:${phoneE164}`}>
               <Phone data-icon="inline-start" />
-              {PHONE_DISPLAY}
+              {phoneDisplay}
             </a>
           </Button>
         </div>
 
         <div className="flex shrink-0 items-center justify-end justify-self-end gap-2 md:hidden">
           <Button size="default" className="px-3 text-sm sm:px-3.5" asChild>
-            <Link href="/contact">Gratis proefles</Link>
+            <Link href={primaryCtaHref}>{primaryCtaText}</Link>
           </Button>
 
           <Sheet>
@@ -104,13 +116,13 @@ export function SiteHeader() {
               <nav className="flex flex-col gap-1 px-2 pb-4" aria-label="Mobiel menu">
                 <SheetClose asChild>
                   <Link
-                    href="/contact"
+                    href={primaryCtaHref}
                     className={cn(
                       buttonVariants({ variant: "default", size: "default" }),
                       "mb-2 justify-center"
                     )}
                   >
-                    Gratis proefles
+                    {primaryCtaText}
                   </Link>
                 </SheetClose>
                 {NAV_LINKS.map((link) => (
@@ -130,14 +142,14 @@ export function SiteHeader() {
                 ))}
                 <SheetClose asChild>
                   <a
-                    href={`tel:${PHONE_E164}`}
+                    href={`tel:${phoneE164}`}
                     className={cn(
                       buttonVariants({ size: "default" }),
                       "mt-4 inline-flex w-full items-center justify-center gap-1.5"
                     )}
                   >
                     <Phone className="size-4 shrink-0" aria-hidden />
-                    Bel {PHONE_DISPLAY}
+                    Bel {phoneDisplay}
                   </a>
                 </SheetClose>
               </nav>

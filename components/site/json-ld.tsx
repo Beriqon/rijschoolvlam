@@ -1,13 +1,16 @@
-import { ADDRESS, PHONE_E164, SITE_LOGO, SITE_NAME, SITE_URL } from "@/lib/constants";
+import { ADDRESS, SITE_LOGO, SITE_NAME, SITE_URL } from "@/lib/constants";
+import { getSiteConfig } from "@/lib/site-config";
 
-export function JsonLd() {
+export async function JsonLd() {
+  const site = await getSiteConfig();
+
   const data = {
     "@context": "https://schema.org",
     "@type": "DrivingSchool",
     name: SITE_NAME,
     url: SITE_URL,
     logo: `${SITE_URL.replace(/\/$/, "")}${SITE_LOGO.src}`,
-    telephone: PHONE_E164,
+    telephone: site.phoneE164,
     address: {
       "@type": "PostalAddress",
       streetAddress: ADDRESS.street,

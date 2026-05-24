@@ -55,9 +55,6 @@ export const metadata: Metadata = {
       "Rijschool Utrecht: professionele rijlessen, duidelijke tarieven en flexibele lestijden.",
     images: [SITE_LOGO.src],
   },
-  alternates: {
-    canonical: "/",
-  },
 };
 
 export default function RootLayout({

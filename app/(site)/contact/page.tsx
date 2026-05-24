@@ -8,7 +8,9 @@ import { ContactForm } from "@/components/site/contact-form";
 import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section } from "@/components/site/section";
-import { CONTACT_EMAIL, OPENING_HOURS, PHONE_DISPLAY, PHONE_E164 } from "@/lib/constants";
+import { OPENING_HOURS } from "@/lib/constants";
+import { getSiteConfig } from "@/lib/site-config";
+import { withCanonical } from "@/lib/metadata";
 
 const TRUST_POINTS = [
   "Gratis proefles & persoonlijk lesadvies",
@@ -16,11 +18,11 @@ const TRUST_POINTS = [
   "Snel reactie via telefoon, mail of formulier",
 ] as const;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/contact", {
   title: "Contact",
   description:
     "Contact Rijschool Vlam Utrecht: adres Willem van Noortstraat 46, bel 06-13568060 of stuur een bericht via het contactformulier.",
-};
+});
 
 function ContactCard({
   icon: Icon,
@@ -44,7 +46,9 @@ function ContactCard({
   );
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const site = await getSiteConfig();
+
   return (
     <>
       <Section className="pt-12 pb-14 md:pt-16 md:pb-20">
@@ -90,10 +94,10 @@ export default function ContactPage() {
                 <div className="bg-card border-primary/20 space-y-8 rounded-2xl border p-6 shadow-sm ring-1 ring-primary/10 sm:p-8">
                   <ContactCard icon={Phone} title="Bel direct">
                     <a
-                      href={`tel:${PHONE_E164}`}
+                      href={`tel:${site.phoneE164}`}
                       className="text-primary font-semibold underline-offset-4 hover:underline"
                     >
-                      {PHONE_DISPLAY}
+                      {site.phoneDisplay}
                     </a>
                     <p className="mt-2 flex items-center gap-2 text-xs">
                       <Clock className="size-3.5 shrink-0 opacity-70" aria-hidden />
@@ -103,10 +107,10 @@ export default function ContactPage() {
 
                   <ContactCard icon={Mail} title="E-mail">
                     <a
-                      href={`mailto:${CONTACT_EMAIL}`}
+                      href={`mailto:${site.contactEmail}`}
                       className="text-primary break-all font-medium underline-offset-4 hover:underline"
                     >
-                      {CONTACT_EMAIL}
+                      {site.contactEmail}
                     </a>
                   </ContactCard>
 
@@ -128,7 +132,7 @@ export default function ContactPage() {
               </div>
 
               <div className="lg:col-span-7">
-                <ContactForm />
+                <ContactForm contactEmail={site.contactEmail} />
               </div>
             </div>
           </div>

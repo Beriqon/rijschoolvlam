@@ -1,12 +1,16 @@
 import { GraduatePhotosCarousel } from "@/components/site/graduate-photos-carousel";
 import { SectionHeading } from "@/components/site/section";
-import { GRADUATE_PHOTOS } from "@/lib/graduate-photos-data";
+import { getGraduatePhotosWithFallback } from "@/lib/graduate-photos-data";
 
 type GraduatePhotosSectionProps = {
   size?: "default" | "compact";
 };
 
-export function GraduatePhotosSection({ size = "default" }: GraduatePhotosSectionProps) {
+export async function GraduatePhotosSection({
+  size = "default",
+}: GraduatePhotosSectionProps) {
+  const slides = await getGraduatePhotosWithFallback();
+
   return (
     <section
       className={
@@ -22,7 +26,7 @@ export function GraduatePhotosSection({ size = "default" }: GraduatePhotosSectio
           description="Fotomomenten van leerlingen na een geslaagd examen."
         />
       </div>
-      <GraduatePhotosCarousel slides={GRADUATE_PHOTOS} size={size} />
+      <GraduatePhotosCarousel slides={slides} size={size} />
     </section>
   );
 }

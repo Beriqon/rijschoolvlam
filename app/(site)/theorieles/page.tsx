@@ -7,12 +7,20 @@ import { CtaBand } from "@/components/site/cta-band";
 import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section } from "@/components/site/section";
+import { withCanonical } from "@/lib/metadata";
+import { getSiteConfig } from "@/lib/site-config";
 
-export const metadata: Metadata = {
-  title: "Theorieles",
+const THEORY_PACKAGE_FALLBACK_LABEL = "€160,-";
+
+function formatTheoryTotalPrice(priceLabel: string): string {
+  return priceLabel.startsWith("€") ? priceLabel.replace(/^€\s*/, "€ ") : priceLabel;
+}
+
+export const metadata: Metadata = withCanonical("/theorieles", {
+  title: "Theoriecursus Utrecht — CBR-theorie-examen",
   description:
     "Theoriecursus Utrecht bij Rijschool Vlam: klassikaal of online, duidelijke uitleg en voorbereiding op het CBR-theorie-examen.",
-};
+});
 
 const OEFENLINKS = [
   {
@@ -27,7 +35,13 @@ const OEFENLINKS = [
   { label: "NuTheorie", href: "https://www.nutheorie.nl/" },
 ] as const;
 
-export default function TheorielesPage() {
+export default async function TheorielesPage() {
+  const site = await getSiteConfig();
+  const theoryPriceLabel =
+    site.extras.find((item) => item.title === "Theorie pakket")?.priceLabel ??
+    THEORY_PACKAGE_FALLBACK_LABEL;
+  const theoryPriceDisplay = formatTheoryTotalPrice(theoryPriceLabel);
+
   return (
     <>
       <Section className="pt-12 pb-16 md:pt-16 md:pb-24">
@@ -69,7 +83,7 @@ export default function TheorielesPage() {
             <div className="relative">
               <p className="text-muted-foreground text-sm font-medium">Totaal voor cursus + examen</p>
               <p className="text-foreground mt-1 text-4xl font-semibold tracking-tight">
-                € 160,-
+                {theoryPriceDisplay}
               </p>
               <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
                 Twee lesdagen zoals hieronder beschreven. Geen verrassingen achteraf — het

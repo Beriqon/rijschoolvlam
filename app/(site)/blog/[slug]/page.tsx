@@ -9,18 +9,49 @@ import { CtaBand } from "@/components/site/cta-band";
 import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section } from "@/components/site/section";
+import {
+  BLOG_CMS_CONTENT_CLASS,
+  prepareBlogHtmlForRender,
+  type BlogTocItem,
+} from "@/lib/cms/blog-html";
 import type { BlogContentNode } from "@/lib/blog-data";
-import { blogCoverImageAnchorClass, getBlogPostBySlug } from "@/lib/blog-data";
+import {
+  blogCoverImageAnchorClass,
+  getBlogPostBySlugWithFallback,
+} from "@/lib/blog-data";
+import { withCanonical } from "@/lib/metadata";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-type TocItem = {
-  id: string;
-  text: string;
-  level: "h2" | "h3";
-};
+function BlogTocAside({ toc }: { toc: BlogTocItem[] }) {
+  if (!toc.length) {
+    return null;
+  }
+
+  return (
+    <aside className="lg:sticky lg:top-24 lg:self-start">
+      <div className="bg-card border-border rounded-2xl border p-6 shadow-sm">
+        <p className="text-sm font-semibold">Inhoudsopgave</p>
+        <nav className="mt-4">
+          <ul className="space-y-2 text-sm">
+            {toc.map((item) => (
+              <li key={item.id} className={item.level === "h3" ? "pl-4" : ""}>
+                <a
+                  href={`#${item.id}`}
+                  className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                >
+                  {item.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </aside>
+  );
+}
 
 function formatPublishedAt(isoDate: string) {
   const d = new Date(`${isoDate}T00:00:00`);
@@ -44,19 +75,23 @@ function slugifyHeading(input: string) {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { slug } = await props.params;
-  const post = getBlogPostBySlug(slug);
+  const post = await getBlogPostBySlugWithFallback(slug);
   if (!post) return { title: "Blog — Rijschool Vlam" };
 
-  return {
+  return withCanonical(`/blog/${slug}`, {
     title: `${post.title} — Rijschool Vlam`,
     description: post.excerpt,
-  };
+  });
 }
 
 export default async function BlogPostPage(props: PageProps) {
   const { slug } = await props.params;
-  const post = getBlogPostBySlug(slug);
+  const post = await getBlogPostBySlugWithFallback(slug);
   if (!post) notFound();
+
+  const cmsPrepared = post.htmlContent
+    ? prepareBlogHtmlForRender(post.htmlContent)
+    : null;
 
   const renderParts = (parts: readonly (string | { type: "a"; text: string; href: string })[]) =>
     parts.map((part, partIdx) =>
@@ -141,7 +176,7 @@ export default async function BlogPostPage(props: PageProps) {
     }
   };
 
-  const toc: TocItem[] =
+  const structuredToc: BlogTocItem[] =
     post.content
       ?.map((n) => {
         if (n.type !== "h2" && n.type !== "h3") return null;
@@ -151,7 +186,7 @@ export default async function BlogPostPage(props: PageProps) {
           level: n.type,
         };
       })
-      .filter((x): x is TocItem => x !== null) ?? [];
+      .filter((x): x is BlogTocItem => x !== null) ?? [];
 
   return (
     <>
@@ -184,8 +219,12 @@ export default async function BlogPostPage(props: PageProps) {
                   {post.title}
                 </h1>
                 <div className="text-muted-foreground mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
-                  <span>{formatPublishedAt(post.publishedAt)}</span>
-                  <span aria-hidden>•</span>
+                  {post.publishedAt ? (
+                    <>
+                      <span>{formatPublishedAt(post.publishedAt)}</span>
+                      <span aria-hidden>•</span>
+                    </>
+                  ) : null}
                   <span>{post.readTimeMinutes} min lezen</span>
                 </div>
                 <p className="text-muted-foreground mt-4 text-sm leading-relaxed md:text-base">
@@ -208,36 +247,24 @@ export default async function BlogPostPage(props: PageProps) {
         </FadeIn>
 
         <FadeIn className="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:px-6 md:pb-16">
-          {post.content?.length ? (
+          {cmsPrepared?.html ? (
+            <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_320px]">
+              <article className="min-w-0">
+                <div
+                  className={BLOG_CMS_CONTENT_CLASS}
+                  dangerouslySetInnerHTML={{ __html: cmsPrepared.html }}
+                />
+              </article>
+              <BlogTocAside toc={cmsPrepared.toc} />
+            </div>
+          ) : post.content?.length ? (
             <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_320px]">
               <article className="min-w-0">
                 <div className="space-y-5">{post.content.map((node, idx) => renderNode(node, idx))}</div>
               </article>
 
-              {toc.length ? (
-                <aside className="lg:sticky lg:top-24 lg:self-start">
-                  <div className="bg-card border-border rounded-2xl border p-6 shadow-sm">
-                    <p className="text-sm font-semibold">Inhoudsopgave</p>
-                    <nav className="mt-4">
-                      <ul className="space-y-2 text-sm">
-                        {toc.map((item) => (
-                          <li
-                            key={item.id}
-                            className={item.level === "h3" ? "pl-4" : ""}
-                          >
-                            <a
-                              href={`#${item.id}`}
-                              className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                            >
-                              {item.text}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </nav>
-                  </div>
-                </aside>
-              ) : null}
+              <BlogTocAside toc={structuredToc} />
+
             </div>
           ) : (
             <div className="space-y-6">

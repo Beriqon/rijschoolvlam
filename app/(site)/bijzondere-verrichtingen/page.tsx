@@ -9,6 +9,7 @@ import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section, SectionHeading } from "@/components/site/section";
 import { BIJZONDERE_VERRICHTING_ITEMS } from "@/lib/bijzondere-verrichtingen-data";
+import { withCanonical } from "@/lib/metadata";
 
 const HERO_POINTS = [
   "Twee afgebakende manoeuvres tijdens je CBR-praktijkexamen",
@@ -16,11 +17,11 @@ const HERO_POINTS = [
   "Met een tussentijdse toets kans op vrijstelling voor wat je al voldoende beheerst",
 ] as const;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/bijzondere-verrichtingen", {
   title: "Bijzondere verrichtingen — Rijschool Vlam Utrecht",
   description:
     "Twee bijzondere verrichtingen op het CBR-praktijkexamen: parkeren, keren, helling, voertuigcontrole en routes zoals de Turbo-rotonde. Uitleg per onderdeel — met ruimte voor illustraties.",
-};
+});
 
 export default function BijzondereVerrichtingenPage() {
   return (

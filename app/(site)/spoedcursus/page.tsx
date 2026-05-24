@@ -18,12 +18,13 @@ import { CtaBand } from "@/components/site/cta-band";
 import { FadeIn } from "@/components/site/fade-in";
 import { GraduatePhotosSection } from "@/components/site/graduate-photos-section";
 import { Section } from "@/components/site/section";
+import { withCanonical } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/spoedcursus", {
   title: "Spoedcursus rijbewijs Utrecht — Rijschool Vlam",
   description:
     "Snel je rijbewijs halen in Utrecht? Kies voor een spoedcursus bij Rijschool Vlam: intensief lesrooster, persoonlijke begeleiding en voorbereiding op het CBR-praktijkexamen.",
-};
+});
 
 const HERO_POINTS = [
   "Meerdere lessen per week rond jouw agenda",

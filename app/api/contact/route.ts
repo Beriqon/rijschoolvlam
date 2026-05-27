@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const CONTACT_TO_EMAIL = "ruchangenc@hotmail.nl";
-const CONTACT_FROM_EMAIL = "onboarding@resend.dev";
+const CONTACT_TO_EMAIL = "info@rijschoolvlam.nl";
+const CONTACT_FROM_EMAIL = "info@rijschoolvlam.nl";
 
 const MAX_LENGTHS = {
   address: 200,
@@ -51,9 +51,37 @@ function validateLength(
   }
 }
 
+function getSmtpConfig() {
+  const host = process.env.SMTP_HOST;
+  const portRaw = process.env.SMTP_PORT;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !portRaw || !user || !pass) {
+    return null;
+  }
+
+  const port = Number(portRaw);
+
+  if (!Number.isFinite(port) || port <= 0) {
+    return null;
+  }
+
+  return {
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+  };
+}
+
 export async function POST(request: Request) {
-  if (!process.env.RESEND_API_KEY) {
-    console.error("Missing RESEND_API_KEY environment variable.");
+  const smtpConfig = getSmtpConfig();
+
+  if (!smtpConfig) {
+    console.error(
+      "Missing or invalid SMTP configuration. Required: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS."
+    );
 
     return NextResponse.json(
       { error: "Het contactformulier is momenteel niet beschikbaar." },
@@ -114,7 +142,6 @@ export async function POST(request: Request) {
     );
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
   const fullName = [firstName, lastName].filter(Boolean).join(" ");
   const emailSubject = subjectLine || "Nieuwe contactaanvraag";
 
@@ -136,26 +163,19 @@ export async function POST(request: Request) {
   ].join("\n");
 
   try {
-    const { error } = await resend.emails.send({
+    const transporter = nodemailer.createTransport(smtpConfig);
+
+    await transporter.sendMail({
       from: CONTACT_FROM_EMAIL,
+      to: CONTACT_TO_EMAIL,
       replyTo: email,
       subject: `Contactaanvraag Rijschool Vlam - ${fullName} - ${emailSubject}`,
       text,
-      to: CONTACT_TO_EMAIL,
     });
-
-    if (error) {
-      console.error("Resend send error:", error);
-
-      return NextResponse.json(
-        { error: "Je bericht kon niet worden verstuurd. Probeer het later opnieuw." },
-        { status: 502 }
-      );
-    }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error("Unexpected contact form error:", error);
+    console.error("SMTP contact form send error:", error);
 
     return NextResponse.json(
       { error: "Je bericht kon niet worden verstuurd. Probeer het later opnieuw." },

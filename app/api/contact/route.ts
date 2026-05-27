@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const CONTACT_TO_EMAIL = "rm33genc@gmail.com";
+const CONTACT_TO_EMAIL = "ruchangenc@hotmail.nl";
 const CONTACT_FROM_EMAIL = "onboarding@resend.dev";
 
 const MAX_LENGTHS = {

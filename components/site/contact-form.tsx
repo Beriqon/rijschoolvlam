@@ -26,58 +26,74 @@ type ContactFormProps = {
   contactEmail?: string;
 };
 
-export function ContactForm({ contactEmail = CONTACT_EMAIL }: ContactFormProps) {
-  const [submitted, setSubmitted] = useState(false);
+type ContactApiResponse = {
+  error?: string;
+  success?: boolean;
+};
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+export function ContactForm({ contactEmail = CONTACT_EMAIL }: ContactFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitState, setSubmitState] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (isSubmitting) return;
+
     const form = e.currentTarget;
     const fd = new FormData(form);
-    const firstName = String(fd.get("firstName") ?? "").trim();
-    const lastName = String(fd.get("lastName") ?? "").trim();
-    const phone = String(fd.get("phone") ?? "").trim();
-    const email = String(fd.get("email") ?? "").trim();
-    const address = String(fd.get("address") ?? "").trim();
-    const postalCode = String(fd.get("postalCode") ?? "").trim();
-    const city = String(fd.get("city") ?? "").trim();
-    const subjectLine = String(fd.get("subject") ?? "").trim();
-    const pkg = String(fd.get("package") ?? "").trim();
-    const message = String(fd.get("message") ?? "").trim();
+    setSubmitState("idle");
+    setErrorMessage(null);
+    setIsSubmitting(true);
 
-    const fullName = [firstName, lastName].filter(Boolean).join(" ");
-    const body = [
-      `Voornaam: ${firstName}`,
-      `Achternaam: ${lastName}`,
-      `Telefoon: ${phone}`,
-      `E-mail: ${email}`,
-      "",
-      `Akkoord met algemene voorwaarden: ja`,
-      "",
-      `Adres: ${address || "—"}`,
-      `Postcode: ${postalCode || "—"}`,
-      `Woonplaats: ${city || "—"}`,
-      "",
-      `Onderwerp: ${subjectLine || "—"}`,
-      `Pakket: ${pkg || "—"}`,
-      "",
-      message ? `Bericht:\n${message}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: String(fd.get("firstName") ?? "").trim(),
+          lastName: String(fd.get("lastName") ?? "").trim(),
+          phone: String(fd.get("phone") ?? "").trim(),
+          email: String(fd.get("email") ?? "").trim(),
+          address: String(fd.get("address") ?? "").trim(),
+          postalCode: String(fd.get("postalCode") ?? "").trim(),
+          city: String(fd.get("city") ?? "").trim(),
+          subject: String(fd.get("subject") ?? "").trim(),
+          package: String(fd.get("package") ?? "").trim(),
+          message: String(fd.get("message") ?? "").trim(),
+          acceptTerms: fd.get("acceptTerms"),
+        }),
+      });
 
-    const mailSubjectParts = [`Contactaanvraag Rijschool Vlam`, fullName];
-    if (pkg) mailSubjectParts.push(pkg);
-    if (subjectLine) mailSubjectParts.push(subjectLine);
+      const result = (await response.json().catch(() => null)) as ContactApiResponse | null;
 
-    const subject = encodeURIComponent(mailSubjectParts.join(" — "));
-    const mailBody = encodeURIComponent(body);
-    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${mailBody}`;
-    setSubmitted(true);
+      if (!response.ok) {
+        setSubmitState("error");
+        setErrorMessage(
+          result?.error ??
+            `Je bericht kon niet worden verstuurd. Probeer het opnieuw of mail naar ${contactEmail}.`
+        );
+        return;
+      }
+
+      form.reset();
+      setSubmitState("success");
+    } catch {
+      setSubmitState("error");
+      setErrorMessage(
+        `Je bericht kon niet worden verstuurd. Probeer het opnieuw of mail naar ${contactEmail}.`
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <form
       onSubmit={handleSubmit}
+      aria-busy={isSubmitting}
       className="bg-card border-border space-y-8 rounded-2xl border p-6 shadow-md ring-1 ring-primary/5 sm:p-8 md:rounded-3xl"
     >
       <div className="space-y-1">
@@ -85,7 +101,7 @@ export function ContactForm({ contactEmail = CONTACT_EMAIL }: ContactFormProps) 
           Stuur een bericht
         </h3>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          Vul het formulier in; je e-mailapp opent met een vooringevuld bericht. Liever bellen? Zie
+          Vul het formulier in en we nemen zo snel mogelijk contact met je op. Liever bellen? Zie
           links.
         </p>
       </div>
@@ -263,22 +279,24 @@ export function ContactForm({ contactEmail = CONTACT_EMAIL }: ContactFormProps) 
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Button type="submit" size="lg" className="w-full sm:w-auto">
-          Open e-mailprogramma
+        <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
+          {isSubmitting ? "Versturen..." : "Verstuur bericht"}
         </Button>
       </div>
-      {submitted ? (
+      {submitState === "success" ? (
         <p className="text-muted-foreground text-sm">
-          Als je mailprogramma niet opent, mail dan handmatig naar{" "}
+          Je bericht is verzonden. We reageren zo snel mogelijk. Liever direct mailen? Gebruik{" "}
           <a className="text-primary font-medium underline" href={`mailto:${contactEmail}`}>
             {contactEmail}
           </a>
           .
         </p>
+      ) : submitState === "error" ? (
+        <p className="text-sm text-destructive">{errorMessage}</p>
       ) : (
         <p className="text-muted-foreground text-xs leading-relaxed">
-          Dit formulier opent je standaard e-mailapp met een vooringevuld bericht. Geen e-mail op
-          dit apparaat? Kopieer de gegevens en stuur ze zelf.
+          Je bericht wordt veilig via ons contactformulier verstuurd. Velden met een * zijn
+          verplicht.
         </p>
       )}
     </form>

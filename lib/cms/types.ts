@@ -80,3 +80,37 @@ export type CmsPageWithSettingsNode = {
   siteSettings: CmsSiteSettings;
   pricingSettings: CmsPricingSettings;
 };
+
+export type CmsLandingPageFields = {
+  herotitel: string | null;
+  herotekst: string | null;
+  introtitel: string | null;
+  introtekst: string | null;
+  contenttitel: string | null;
+  contenttekst: string | null;
+  faqtitel: string | null;
+  faq1vraag: string | null;
+  faq1antwoord: string | null;
+  faq2vraag: string | null;
+  faq2antwoord: string | null;
+  faq3vraag: string | null;
+  faq3antwoord: string | null;
+  faq4vraag: string | null;
+  faq4antwoord: string | null;
+  faq5vraag: string | null;
+  faq5antwoord: string | null;
+  ctatitel: string | null;
+  ctatekst: string | null;
+  ctaknoptekst: string | null;
+  ctaknopurl: string | null;
+  seotitel: string | null;
+  metabeschrijving: string | null;
+} | null;
+
+export type CmsLandingPageNode = {
+  title: string;
+  slug: string;
+  featuredImage: CmsFeaturedImage;
+  categories?: { nodes: CmsBlogTermNode[] } | null;
+  landingspaginaVelden: CmsLandingPageFields;
+};

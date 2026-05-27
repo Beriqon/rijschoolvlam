@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 
+import { getLandingPageFooterGroupsWithFallback } from "@/lib/landing-pages-data";
 import {
   ADDRESS,
   CONTACT_EMAIL,
@@ -48,19 +49,21 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-export function SiteFooter({
+export async function SiteFooter({
   phoneDisplay = PHONE_DISPLAY,
   phoneE164 = PHONE_E164,
   contactEmail = CONTACT_EMAIL,
 }: SiteFooterProps) {
+  const { regions, popular } = await getLandingPageFooterGroupsWithFallback();
+
   return (
-    <footer className="border-border bg-card text-card-foreground border-t">
+    <footer className="border-t border-white/10 bg-slate-950 text-slate-100">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8 xl:gap-12">
           <div>
             <Link
               href="/"
-              className="relative inline-flex py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+              className="relative inline-flex rounded-md py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               aria-label={`${SITE_NAME} — home`}
             >
               <Image
@@ -73,15 +76,15 @@ export function SiteFooter({
                 unoptimized={SITE_LOGO.src.endsWith(".svg")}
               />
             </Link>
-            <p className="text-muted-foreground mt-4 text-sm leading-relaxed">
+            <p className="mt-4 text-sm leading-relaxed text-slate-400">
               Rijlessen in Utrecht en omgeving. Gratis proefles, duidelijke tarieven en
               persoonlijke begeleiding tot je praktijkexamen bij het CBR.
             </p>
             <a
               href={`tel:${phoneE164}`}
-              className="text-primary mt-6 inline-flex items-center gap-2.5 text-sm font-semibold transition-colors hover:underline"
+              className="mt-6 inline-flex items-center gap-2.5 text-sm font-semibold text-white transition-colors hover:text-primary hover:underline"
             >
-              <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-lg">
+              <span className="flex size-9 items-center justify-center rounded-lg bg-white/8 text-primary">
                 <Phone className="size-4" aria-hidden />
               </span>
               {phoneDisplay}
@@ -89,7 +92,7 @@ export function SiteFooter({
           </div>
 
           <div>
-            <p className="text-foreground text-xs font-semibold uppercase tracking-wider">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white">
               Pagina&apos;s
             </p>
             <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm lg:grid-cols-1">
@@ -97,7 +100,7 @@ export function SiteFooter({
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-muted-foreground hover:text-foreground underline-offset-4 transition-colors hover:underline"
+                    className="text-slate-400 underline-offset-4 transition-colors hover:text-white hover:underline"
                   >
                     {l.label}
                   </Link>
@@ -107,16 +110,16 @@ export function SiteFooter({
           </div>
 
           <div>
-            <p className="text-foreground text-xs font-semibold uppercase tracking-wider">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white">
               Contact &amp; bedrijf
             </p>
             <div className="mt-4 space-y-5 text-sm">
               <div className="flex gap-3">
-                <span className="bg-muted text-muted-foreground mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg">
+                <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/6 text-slate-300">
                   <MapPin className="size-4" aria-hidden />
                 </span>
                 <address className="not-italic">
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="leading-relaxed text-slate-400">
                     {ADDRESS.street}
                     <br />
                     {ADDRESS.postalCode} {ADDRESS.city}
@@ -126,19 +129,19 @@ export function SiteFooter({
                 </address>
               </div>
               <div className="flex items-start gap-3">
-                <span className="bg-muted text-muted-foreground mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg">
+                <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/6 text-slate-300">
                   <Mail className="size-4" aria-hidden />
                 </span>
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="text-muted-foreground hover:text-foreground min-w-0 break-words font-medium underline-offset-4 transition-colors hover:underline"
+                  className="min-w-0 break-words font-medium text-slate-400 underline-offset-4 transition-colors hover:text-white hover:underline"
                 >
                   {contactEmail}
                 </a>
               </div>
-              <div className="border-border text-muted-foreground border-t pt-5 text-xs leading-relaxed">
+              <div className="border-t border-white/10 pt-5 text-xs leading-relaxed text-slate-400">
                 <p>
-                  <span className="text-foreground font-medium">KvK-nummer</span>{" "}
+                  <span className="font-medium text-white">KvK-nummer</span>{" "}
                   <span className="tabular-nums">{KVK_NUMBER}</span>
                 </p>
               </div>
@@ -146,19 +149,65 @@ export function SiteFooter({
           </div>
 
           <div>
-            <p className="text-foreground text-xs font-semibold uppercase tracking-wider">
+            <p className="text-xs font-semibold uppercase tracking-wider text-white">
               Openingstijden
             </p>
-            <dl className="text-muted-foreground mt-4 space-y-1.5 text-sm leading-relaxed tabular-nums">
+            <dl className="mt-4 space-y-1.5 text-sm leading-relaxed tabular-nums text-slate-400">
               {OPENING_HOURS.map(({ day, hours }) => (
                 <div key={day} className="flex justify-between gap-3">
-                  <dt className="text-foreground/90 shrink-0 font-normal">{day}</dt>
+                  <dt className="shrink-0 font-normal text-slate-200">{day}</dt>
                   <dd className="text-right">{hours}</dd>
                 </div>
               ))}
             </dl>
           </div>
         </div>
+
+        {regions.length > 0 || popular.length > 0 ? (
+          <div className="mt-10 border-t border-white/10 pt-10">
+            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+              {regions.length > 0 ? (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-white">
+                    Rijschool regio&apos;s
+                  </p>
+                  <ul className="mt-4 grid gap-x-6 gap-y-2.5 text-sm sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                    {regions.map((page) => (
+                      <li key={page.slug}>
+                        <Link
+                          href={`/${page.slug}`}
+                          className="text-slate-400 underline-offset-4 transition-colors hover:text-white hover:underline"
+                        >
+                          {page.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {popular.length > 0 ? (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-white">
+                    Populaire pagina&apos;s
+                  </p>
+                  <ul className="mt-4 grid gap-x-6 gap-y-2.5 text-sm sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                    {popular.map((page) => (
+                      <li key={page.slug}>
+                        <Link
+                          href={`/${page.slug}`}
+                          className="text-slate-400 underline-offset-4 transition-colors hover:text-white hover:underline"
+                        >
+                          {page.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
 
         <div className="mt-12">
           <div className="mb-6 flex justify-center sm:mb-8 sm:justify-end">
@@ -167,7 +216,7 @@ export function SiteFooter({
                 href={FACEBOOK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground border-border bg-background flex size-10 items-center justify-center rounded-lg border transition-colors"
+                className="flex size-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
                 aria-label={`${SITE_NAME} op Facebook`}
               >
                 <FacebookIcon className="size-5" />
@@ -176,20 +225,20 @@ export function SiteFooter({
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground border-border bg-background flex size-10 items-center justify-center rounded-lg border transition-colors"
+                className="flex size-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
                 aria-label={`${SITE_NAME} op Instagram`}
               >
                 <InstagramIcon className="size-5" />
               </a>
             </div>
           </div>
-          <div className="border-border flex flex-col gap-4 border-t pt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-6">
-            <p className="text-muted-foreground text-xs sm:text-sm">
+          <div className="flex flex-col gap-4 border-t border-white/10 pt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-6">
+            <p className="text-xs text-slate-400 sm:text-sm">
               © {new Date().getFullYear()} {SITE_NAME}. Alle rechten voorbehouden.
             </p>
             <Link
               href="/algemene-voorwaarden"
-              className="text-muted-foreground hover:text-foreground text-xs font-medium underline-offset-4 transition-colors hover:underline sm:text-sm"
+              className="text-xs font-medium text-slate-400 underline-offset-4 transition-colors hover:text-white hover:underline sm:text-sm"
             >
               Algemene voorwaarden
             </Link>

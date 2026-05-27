@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { SiteShell } from "@/components/site/site-shell";
 
-export default async function SiteLayout({
+export default function LandingPageLayout({
   children,
 }: {
   children: ReactNode;

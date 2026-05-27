@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html
       lang="nl"
-      className={`dark ${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
         <JsonLd />

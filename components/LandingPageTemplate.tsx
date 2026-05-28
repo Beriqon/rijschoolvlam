@@ -57,7 +57,7 @@ function RichText({
     <div
       className={cn(
         BLOG_CMS_CONTENT_CLASS,
-        "[&_h2]:mt-8 [&_h2]:text-xl [&_h2]:md:text-2xl [&_h3]:mt-6 [&_p]:text-foreground/86 [&_ul]:text-foreground/86 [&_ol]:text-foreground/86 [&_li]:text-foreground/86",
+        "[&_h2]:mt-8 [&_h2]:text-xl [&_h2]:md:text-2xl [&_h3]:mt-6 [&_p]:text-foreground/92 [&_ul]:text-foreground/92 [&_ol]:text-foreground/92 [&_li]:text-foreground/92",
         className,
       )}
       dangerouslySetInnerHTML={{ __html: html }}
@@ -111,13 +111,9 @@ export function LandingPageTemplate({
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-white via-background to-secondary/60">
+      <section className="relative overflow-hidden border-b border-border/70 bg-gradient-to-b from-background via-background to-muted/30">
         <div
           className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,122,0,0.14),transparent_38%),radial-gradient(circle_at_bottom_left,rgba(255,122,0,0.08),transparent_34%)]"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-[-5rem] h-40 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.82)_35%,rgba(255,255,255,0)_76%)] blur-3xl"
           aria-hidden
         />
         <div
@@ -156,24 +152,24 @@ export function LandingPageTemplate({
 
           <FadeIn delay={0.08}>
             {page.heroImage ? (
-              <div className="border-border/70 bg-card/92 overflow-hidden rounded-3xl border p-3 shadow-[0_24px_80px_-34px_rgba(15,23,42,0.16)] ring-1 ring-primary/10 backdrop-blur sm:p-4">
+              <div className="border-border/70 bg-card/80 overflow-hidden rounded-3xl border p-3 shadow-[0_24px_80px_-34px_rgba(0,0,0,0.7)] ring-1 ring-primary/10 backdrop-blur sm:p-4">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-[1.35rem] bg-muted/40">
                   <Image
                     src={page.heroImage.src}
                     alt={page.heroImage.alt}
                     fill
                     priority
-                    className="object-cover brightness-105 saturate-[0.88]"
+                    className="object-cover"
                     sizes="(max-width: 1023px) 100vw, 30rem"
                   />
                   <div
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/88 via-white/16 to-transparent"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-transparent"
                     aria-hidden
                   />
                 </div>
               </div>
             ) : (
-              <div className="border-border/70 from-card via-card to-secondary/65 rounded-3xl border bg-gradient-to-br p-6 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.14)]">
+              <div className="border-border/70 from-card via-card to-muted/35 rounded-3xl border bg-gradient-to-br p-6 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.5)]">
                 <p className="text-primary text-xs font-semibold tracking-[0.16em] uppercase">
                   Waarom leerlingen kiezen
                 </p>

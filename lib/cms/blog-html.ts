@@ -1,3 +1,5 @@
+import { stripInlinePresentationAttrs } from "@/lib/cms/strip-inline-styles";
+
 export type BlogTocItem = {
   id: string;
   text: string;
@@ -9,7 +11,7 @@ const BLOG_CMS_BUTTON_LINK_CLASS =
 
 /** Tailwind selectors: zelfde typografie/spacing als hardcoded blog content nodes. */
 export const BLOG_CMS_CONTENT_CLASS =
-  `space-y-5 [&_h2]:mt-12 [&_h2]:scroll-mt-28 [&_h2]:text-balance [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-foreground [&_h2]:first:mt-0 [&_h2]:md:text-3xl [&_h3]:mt-7 [&_h3]:scroll-mt-28 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:tracking-tight [&_h3]:text-foreground [&_h3]:md:text-xl [&_p]:text-foreground/80 [&_p]:text-base [&_p]:leading-7 [&_p]:md:text-[1.05rem] [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&_ul]:leading-7 [&_ul]:text-foreground/80 [&_ul]:md:text-[1.05rem] [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-5 [&_ol]:leading-7 [&_ol]:text-foreground/80 [&_li]:text-foreground/80 [&_a]:font-medium [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-4 [&_strong]:font-semibold [&_strong]:text-foreground ${BLOG_CMS_BUTTON_LINK_CLASS}`;
+  `space-y-5 [&_h2]:mt-12 [&_h2]:scroll-mt-28 [&_h2]:text-balance [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-foreground [&_h2]:first:mt-0 [&_h2]:md:text-3xl [&_h3]:mt-7 [&_h3]:scroll-mt-28 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:tracking-tight [&_h3]:text-foreground [&_h3]:md:text-xl [&_p]:text-foreground/92 [&_p]:text-base [&_p]:leading-7 [&_p]:md:text-[1.05rem] [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&_ul]:leading-7 [&_ul]:text-foreground/92 [&_ul]:md:text-[1.05rem] [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-5 [&_ol]:leading-7 [&_ol]:text-foreground/92 [&_li]:text-foreground/92 [&_a]:font-medium [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary/85 [&_strong]:font-semibold [&_strong]:text-foreground ${BLOG_CMS_BUTTON_LINK_CLASS}`;
 
 function slugifyHeading(input: string) {
   return input
@@ -31,11 +33,13 @@ function stripHtmlTags(html: string) {
 }
 
 function sanitizeBlogHtml(html: string) {
-  return html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
-    .replace(/\son\w+="[^"]*"/gi, "")
-    .replace(/\son\w+='[^']*'/gi, "");
+  return stripInlinePresentationAttrs(
+    html
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
+      .replace(/\son\w+="[^"]*"/gi, "")
+      .replace(/\son\w+='[^']*'/gi, ""),
+  );
 }
 
 /** Markeer WordPress button-block links voor CTA-styling (primary button). */

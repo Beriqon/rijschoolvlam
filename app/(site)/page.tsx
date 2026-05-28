@@ -84,21 +84,16 @@ export default async function HomePage() {
     <>
       <FaqJsonLd items={HOME_FAQ_ITEMS} />
 
-      <section className="relative min-h-[min(100vh,52rem)] overflow-hidden bg-white">
+      <section className="relative min-h-[min(100vh,52rem)] overflow-hidden">
         <Image
           src={HERO_IMAGE}
           alt="Rijles Utrecht bij Rijschool Vlam"
           fill
           priority
-          className="scale-[1.02] object-cover brightness-110 saturate-[0.82]"
+          className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-white/42" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-white/16" />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-[-5.5rem] h-56 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.88)_34%,rgba(255,255,255,0)_76%)] blur-3xl"
-          aria-hidden
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/20" />
         <div className="relative mx-auto flex min-h-[min(100vh,52rem)] max-w-7xl flex-col justify-center px-4 pt-24 pb-16 sm:px-6 sm:pt-28 sm:pb-20 lg:px-8 lg:pt-32 lg:pb-24">
           <FadeIn className="max-w-3xl">
             <p className="text-primary mb-3 text-sm font-semibold tracking-wide uppercase">

@@ -39,7 +39,7 @@ export function SiteHeader({
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/88 text-slate-100 backdrop-blur-md">
+    <header className="bg-background/85 border-border sticky top-0 z-40 border-b backdrop-blur-md">
       <div className="mx-auto grid h-20 w-full max-w-7xl grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 px-4 sm:px-6 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-x-4 lg:gap-x-6 lg:px-8">
         <Link
           href="/"
@@ -70,8 +70,8 @@ export function SiteHeader({
                   className={cn(
                     "block rounded-md px-2.5 py-2.5 text-[0.9375rem] font-medium transition-colors lg:px-3.5",
                     pathname === link.href
-                      ? "bg-white/10 text-white"
-                      : "text-slate-300 hover:bg-white/8 hover:text-white"
+                      ? "bg-secondary text-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
                   {link.label}
@@ -85,12 +85,7 @@ export function SiteHeader({
           <Button size="default" className="shrink-0 text-[0.9375rem]" asChild>
             <Link href={primaryCtaHref}>{primaryCtaText}</Link>
           </Button>
-          <Button
-            size="default"
-            variant="outline"
-            className="shrink-0 border-white/12 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-            asChild
-          >
+          <Button size="default" variant="outline" className="shrink-0 text-[0.9375rem]" asChild>
             <a href={`tel:${phoneE164}`}>
               <Phone data-icon="inline-start" />
               {phoneDisplay}
@@ -108,18 +103,15 @@ export function SiteHeader({
               <Button
                 variant="outline"
                 size="icon"
-                className="border-white/12 bg-white/5 text-white hover:bg-white/10 hover:text-white md:hidden"
+                className="md:hidden"
                 aria-label="Menu openen"
               >
                 <Menu />
               </Button>
             </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[min(100%,20rem)] border-white/10 bg-slate-950 text-slate-100"
-            >
+            <SheetContent side="right" className="w-[min(100%,20rem)]">
               <SheetHeader>
-                <SheetTitle className="text-white">Menu</SheetTitle>
+                <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-2 pb-4" aria-label="Mobiel menu">
                 <SheetClose asChild>
@@ -140,8 +132,8 @@ export function SiteHeader({
                       className={cn(
                         "rounded-md px-3 py-2.5 text-sm font-medium",
                         pathname === link.href
-                          ? "bg-white/10 text-white"
-                          : "text-slate-300 hover:bg-white/8 hover:text-white"
+                          ? "bg-secondary text-foreground"
+                          : "text-muted-foreground hover:bg-muted"
                       )}
                     >
                       {link.label}
@@ -152,8 +144,8 @@ export function SiteHeader({
                   <a
                     href={`tel:${phoneE164}`}
                     className={cn(
-                      buttonVariants({ variant: "outline", size: "default" }),
-                      "mt-4 inline-flex w-full items-center justify-center gap-1.5 border-white/12 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                      buttonVariants({ size: "default" }),
+                      "mt-4 inline-flex w-full items-center justify-center gap-1.5"
                     )}
                   >
                     <Phone className="size-4 shrink-0" aria-hidden />

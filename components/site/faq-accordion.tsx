@@ -199,7 +199,7 @@ function renderAnswerBlock(block: string, keyPrefix: string, index: number) {
   const key = `${keyPrefix}-b${index}`;
   if (!block.startsWith("## ")) {
     return (
-      <p key={key} className="text-pretty text-muted-foreground">
+      <p key={key} className="text-pretty text-foreground/92">
         {linkifyFaqRichText(block)}
       </p>
     );
@@ -220,7 +220,7 @@ function renderAnswerBlock(block: string, keyPrefix: string, index: number) {
         {linkifyFaqRichText(title)}
       </h4>
       {bodyParagraphs.map((bp, j) => (
-        <p key={`${key}-p${j}`} className="text-pretty text-muted-foreground">
+        <p key={`${key}-p${j}`} className="text-pretty text-foreground/92">
           {linkifyFaqRichText(bp)}
         </p>
       ))}

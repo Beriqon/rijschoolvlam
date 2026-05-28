@@ -147,7 +147,7 @@ export default async function BlogPostPage(props: PageProps) {
         return (
           <p
             key={idx}
-            className="text-foreground/80 text-base leading-7 md:text-[1.05rem]"
+            className="text-foreground/92 text-base leading-7 md:text-[1.05rem]"
           >
             {"text" in node ? node.text : renderParts(node.parts)}
           </p>
@@ -156,10 +156,10 @@ export default async function BlogPostPage(props: PageProps) {
         return (
           <ul
             key={idx}
-            className="text-foreground/80 list-disc space-y-2 pl-5 leading-7 md:text-[1.05rem]"
+            className="text-foreground/92 list-disc space-y-2 pl-5 leading-7 md:text-[1.05rem]"
           >
             {node.items.map((item, itemIdx) => (
-              <li key={itemIdx} className="text-foreground/80">
+              <li key={itemIdx} className="text-foreground/92">
                 {typeof item === "string" ? item : renderParts(item)}
               </li>
             ))}

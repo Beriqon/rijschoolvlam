@@ -29,6 +29,9 @@ type ContactFormProps = {
 type ContactApiResponse = {
   error?: string;
   success?: boolean;
+  name?: string;
+  code?: string;
+  message?: string;
 };
 
 export function ContactForm({ contactEmail = CONTACT_EMAIL }: ContactFormProps) {
@@ -71,9 +74,12 @@ export function ContactForm({ contactEmail = CONTACT_EMAIL }: ContactFormProps) 
 
       if (!response.ok) {
         setSubmitState("error");
+        const apiMessage = result?.message ?? result?.error;
+        const apiCode = result?.code ? ` (${result.code})` : "";
         setErrorMessage(
-          result?.error ??
-            `Je bericht kon niet worden verstuurd. Probeer het opnieuw of mail naar ${contactEmail}.`
+          apiMessage
+            ? `${apiMessage}${apiCode}`
+            : `Je bericht kon niet worden verstuurd. Probeer het opnieuw of mail naar ${contactEmail}.`
         );
         return;
       }

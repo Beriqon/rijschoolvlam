@@ -51,6 +51,42 @@ function validateLength(
   }
 }
 
+function redactSecrets(value: string) {
+  const pass = process.env.SMTP_PASS;
+  if (!pass || !value.includes(pass)) {
+    return value;
+  }
+
+  return value.replaceAll(pass, "[REDACTED]");
+}
+
+function getMailErrorDetails(error: unknown) {
+  if (!error || typeof error !== "object") {
+    return { name: undefined, code: undefined, message: undefined };
+  }
+
+  const err = error as {
+    name?: unknown;
+    code?: unknown;
+    message?: unknown;
+    response?: unknown;
+    responseCode?: unknown;
+    command?: unknown;
+  };
+
+  const message =
+    typeof err.message === "string" ? redactSecrets(err.message) : undefined;
+
+  return {
+    name: typeof err.name === "string" ? err.name : undefined,
+    code: typeof err.code === "string" ? err.code : undefined,
+    message,
+    response: typeof err.response === "string" ? redactSecrets(err.response) : err.response,
+    responseCode: err.responseCode,
+    command: typeof err.command === "string" ? err.command : undefined,
+  };
+}
+
 function getSmtpConfig() {
   const host = process.env.SMTP_HOST;
   const portRaw = process.env.SMTP_PORT;
@@ -175,10 +211,22 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
+    const details = getMailErrorDetails(error);
+
     console.error("SMTP contact form send error:", error);
+    console.error("SMTP/Nodemailer error details:", details);
+
+    const debugMessage =
+      details.message ??
+      "Je bericht kon niet worden verstuurd. Probeer het later opnieuw.";
 
     return NextResponse.json(
-      { error: "Je bericht kon niet worden verstuurd. Probeer het later opnieuw." },
+      {
+        error: debugMessage,
+        name: details.name,
+        code: details.code,
+        message: details.message,
+      },
       { status: 500 }
     );
   }
